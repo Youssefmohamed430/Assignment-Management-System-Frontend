@@ -8,6 +8,7 @@ import { EditCourse } from './Components/edit-course/edit-course';
 import { AssignmentDetails } from './Components/assignment-details/assignment-details';
 import { AddAssignment } from './Components/add-assignment/add-assignment';
 import { EditAssignment } from './Components/edit-assignment/edit-assignment';
+import { SubmitAssignment } from './Components/submit-assignment/submit-assignment';
 
 export const routes: Routes = [
     {path: 'Home', component : Home},
@@ -19,4 +20,5 @@ export const routes: Routes = [
     {path: 'AssignmentDetails/:id', component : AssignmentDetails},
     {path: 'AddAssignment/:id', component : AddAssignment},
     {path: 'EditAssignment/:id', component : EditAssignment},
+    {path: 'SubmitAssignment/:id', component : SubmitAssignment},
 ];
