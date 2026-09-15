@@ -1,0 +1,14 @@
+<form>
+  <fieldset >
+    <legend>Edit Assignment</legend>
+    <div class="mb-3">
+      <label for="assignmentName" class="form-label">Assignment Title</label>
+      <input type="text" id="assignmentName" class="form-control" placeholder="Assignment title" value="{{ assignment?.title }}">
+    </div>
+    <div class="mb-3">
+      <label for="assignmentDescription" class="form-label">Assignment Deadline</label>
+      <input type="date" id="assignmentDescription" class="form-control" placeholder="Assignment date" value="{{ assignment?.deadline | date:'yyyy-MM-dd' }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </fieldset>
+</form>
