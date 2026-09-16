@@ -1,22 +1,101 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Assignment Manager</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+    <a class="navbar-brand" routerLink="/Home">
+      Assignment Manager
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <!-- Left Side -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" routerLink = "/Home">Home</a>
+          <a
+            class="nav-link active"
+            aria-current="page"
+            routerLink="/Home">
+            Home
+          </a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link" routerLink = "/Courses">Courses</a>
+          <a
+            class="nav-link"
+            routerLink="/Courses">
+            Courses
+          </a>
         </li>
+
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+
+      <!-- Right Side -->
+      <div class="d-flex align-items-center gap-3">
+
+        <!-- Search -->
+        <form class="d-flex">
+          <input
+            class="form-control me-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search">
+
+          <button
+            class="btn btn-outline-success"
+            type="submit">
+            Search
+          </button>
+        </form>
+
+        <!-- Notifications -->
+        <div class="position-relative">
+
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            (click)="toggleNotifications()">
+
+            🔔
+
+          </button>
+
+          <!-- Notifications Dropdown -->
+          @if (showNotifications) {
+
+            <div
+              class="dropdown-menu show position-absolute end-0 mt-2 p-0 shadow"
+              style="width: 320px;">
+
+              <div class="p-3 border-bottom fw-bold">
+                Notifications
+              </div>
+              @for(notification of notifications; track notification.id) {
+
+                <div class="notification-item p-3 border-bottom">
+                  <p class="mb-0 text-muted small">
+                    {{ notification.message }}
+                  </p>
+                  <small class="text-muted">
+                    {{ notification.date | date:'short' }}
+                  </small>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
     </div>
   </div>
 </nav>

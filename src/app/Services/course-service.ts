@@ -24,4 +24,8 @@ export class CourseService {
   public DeleteCourse(id: number) {
     // Call the API to delete the course with the given id
   }
+
+  public EnrollInCourse(id: number) {
+    // Call the API to enroll in the course with the given id
+  }
 }

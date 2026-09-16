@@ -21,4 +21,9 @@ export class Courses {
     this.CoursesList = this.courseservice.getCourses();
   }
 
+  EnrollInCourse(id: number) {
+    this.courseservice.EnrollInCourse(id);
+    this.CoursesList = this.courseservice.getCourses();
+  }
+
 }
