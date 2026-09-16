@@ -7,6 +7,18 @@
         Add Course
       </a>
     </button>
+
+    <button class="btn btn-primary">
+      <a routerLink = "/EnrollCourse" class="text-white text-decoration-none">
+        Enrol Courses 
+      </a>
+    </button>
+
+    <!-- <button class="btn btn-primary">
+                <a (click)="EnrollInCourse(course.id)" class="text-white text-decoration-none">
+                  Enroll
+                </a>
+    </button> -->
   </div>
 
   <!-- Courses -->
@@ -51,12 +63,6 @@
               <button class="btn btn-danger">
                 <a (click)="DeleteCourse(course.id)" class="text-white text-decoration-none">
                   Delete
-                </a>
-              </button>
-
-              <button class="btn btn-primary">
-                <a (click)="EnrollInCourse(course.id)" class="text-white text-decoration-none">
-                  Enroll
                 </a>
               </button>
             </div>

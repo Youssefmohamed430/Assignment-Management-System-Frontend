@@ -14,4 +14,8 @@ export class NotificationService {
   getNotifications(): notification[] {
     return this.notifications;
   }
+
+  public markAsRead(notificationId: number): void {
+    const notification = this.notifications.find(n => n.id === notificationId);
+  }
 }

@@ -39,25 +39,26 @@
           </a>
         </li>
 
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/Students">
+            Students
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/Submissions">
+            Submissions
+          </a>
+        </li>
+
       </ul>
 
       <!-- Right Side -->
       <div class="d-flex align-items-center gap-3">
-
-        <!-- Search -->
-        <form class="d-flex">
-          <input
-            class="form-control me-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search">
-
-          <button
-            class="btn btn-outline-success"
-            type="submit">
-            Search
-          </button>
-        </form>
 
         <!-- Notifications -->
         <div class="position-relative">
@@ -90,7 +91,14 @@
                   <small class="text-muted">
                     {{ notification.date | date:'short' }}
                   </small>
+                  <button
+                    class="btn btn-sm btn-outline-success ms-3"
+                    (click)="markAsRead(notification.id)">
+                      ✓
+                  </button>
                 </div>
+
+                 
               }
             </div>
           }

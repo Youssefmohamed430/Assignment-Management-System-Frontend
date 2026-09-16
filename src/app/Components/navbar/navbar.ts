@@ -24,5 +24,8 @@ export class Navbar {
     this.showNotifications = !this.showNotifications;
   }
   
-
+  markAsRead(notificationId: number): void {
+    this.notificationService.markAsRead(notificationId);
+    this.notifications = this.notificationService.getNotifications();
+  }
 }

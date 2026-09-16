@@ -1,0 +1,41 @@
+<h1>Submissions</h1>
+<br>
+  <!-- Submission -->
+  <div class="list-group">
+
+    @for (sub of submissionList; track sub.id) {
+
+      <div
+        class="list-group-item d-flex justify-content-between align-items-center p-3">
+
+        <!-- Student Information -->
+        <div>
+          <h5 class="mb-1">
+            {{ sub.filename }}
+          </h5>
+
+          <small class="text-muted">
+            {{ sub.SubmitDate | date}}
+          </small>
+        </div>
+
+        <!-- View Button -->
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="ViewFile(sub.id)">
+          View
+        </button>
+
+      </div>
+
+    }
+
+    @empty {
+      <div class="alert alert-warning text-center">
+        No SubmitFiles found.
+      </div>
+    }
+
+  </div>
+
