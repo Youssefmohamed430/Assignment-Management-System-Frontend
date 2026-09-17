@@ -13,20 +13,31 @@ import { Studentspage } from './Components/studentspage/studentspage';
 import { StudentDetails } from './Components/student-details/student-details';
 import { Submissions } from './Components/submissions/submissions';
 import { EnrollCourse } from './Components/enroll-course/enroll-course';
+import { Notfound } from './Components/notfound/notfound';
+import { authGuardGuard } from './guards/auth-guard-guard';
+import { adminguardGuard } from './guards/adminguard-guard';
+import { studentguardGuard } from './guards/studentguard-guard';
+import { instructorguardGuard } from './guards/instructorguard-guard';
 
 export const routes: Routes = [
     {path: 'Home', component : Home},
     {path: 'Login', component : Login},
     {path: 'Register', component : Register},
-    {path: 'Courses', component : Courses},
-    {path: 'EnrollCourse', component : EnrollCourse},
-    {path: 'AddCourse', component : AddCourse},
-    {path: 'EditCourse/:id', component : EditCourse},
-    {path: 'AssignmentDetails/:id', component : AssignmentDetails},
-    {path: 'AddAssignment/:id', component : AddAssignment},
-    {path: 'EditAssignment/:id', component : EditAssignment},
-    {path: 'SubmitAssignment/:id', component : SubmitAssignment},
-    {path: 'Students', component : Studentspage},
-    {path: 'ViewStudent/:id' , component:StudentDetails},
-    {path: 'Submissions' , component:Submissions}
+    {
+        path: 'Courses',
+        children: [
+            { path: '',component: Courses , canActivate:[authGuardGuard]},
+            { path: 'AddCourse', component: AddCourse,canActivate:[authGuardGuard,adminguardGuard] },
+            { path: 'EnrollCourse', component: EnrollCourse,canActivate:[authGuardGuard,studentguardGuard]},
+            { path: 'EditCourse/:id', component : EditCourse,canActivate:[authGuardGuard,adminguardGuard]},
+            { path: 'AssignmentDetails/:id', component : AssignmentDetails,canActivate:[authGuardGuard]},
+            {path: 'AssignmentDetails/:id/AddAssignment', component : AddAssignment,canActivate:[authGuardGuard,instructorguardGuard]},
+            {path: 'AssignmentDetails/:courseId/EditAssignment/:assignmentId', component : EditAssignment,canActivate:[authGuardGuard,instructorguardGuard]},
+            {path: 'AssignmentDetails/:courseId/SubmitAssignment/:assignmentId', component : SubmitAssignment,canActivate:[authGuardGuard,studentguardGuard]}
+        ]
+    },
+    {path: 'Students', component : Studentspage,canActivate:[authGuardGuard,instructorguardGuard]},
+    {path: 'ViewStudent/:id' , component:StudentDetails,canActivate:[authGuardGuard,instructorguardGuard]},
+    {path: 'Submissions' , component:Submissions,canActivate:[authGuardGuard,instructorguardGuard]},
+    {path: '**', component: Notfound }
 ];

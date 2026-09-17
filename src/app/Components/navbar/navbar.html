@@ -38,43 +38,38 @@
             Courses
           </a>
         </li>
-
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/Students">
-            Students
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/Submissions">
-            Submissions
-          </a>
-        </li>
-
+        @if(authservice.isInstructor()){
+              <li class="nav-item">
+                <a
+                class="nav-link"
+                routerLink="/Students">
+                Students
+              </a>
+            </li>
+        }
+        @if(authservice.isInstructor()){
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              routerLink="/Submissions">
+              Submissions
+            </a>
+          </li>
+        }
       </ul>
-
+      
       <!-- Right Side -->
       <div class="d-flex align-items-center gap-3">
-
         <!-- Notifications -->
         <div class="position-relative">
-
           <button
             type="button"
             class="btn btn-outline-primary"
             (click)="toggleNotifications()">
-
             🔔
-
           </button>
-
           <!-- Notifications Dropdown -->
           @if (showNotifications) {
-
             <div
               class="dropdown-menu show position-absolute end-0 mt-2 p-0 shadow"
               style="width: 320px;">
@@ -97,8 +92,6 @@
                       ✓
                   </button>
                 </div>
-
-                 
               }
             </div>
           }

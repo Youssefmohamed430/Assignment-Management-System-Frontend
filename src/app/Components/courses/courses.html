@@ -1,25 +1,30 @@
+<h1>Courses</h1>
+<br>
 <div class="container py-4">
-
+  
   <!-- Add Course -->
   <div class="d-flex justify-content-end mb-4">
-    <button class="btn btn-primary">
-      <a routerLink = "/AddCourse" class="text-white text-decoration-none">
-        Add Course
-      </a>
-    </button>
+    @if(authservice.isAdmin())
+    {
+      <button class="btn btn-primary">
+        
+        <a routerLink = "/Courses/AddCourse" class="text-white text-decoration-none">
+          Add Course
+        </a>
+      </button>
+    }
 
-    <button class="btn btn-primary">
-      <a routerLink = "/EnrollCourse" class="text-white text-decoration-none">
-        Enrol Courses 
-      </a>
-    </button>
-
-    <!-- <button class="btn btn-primary">
-                <a (click)="EnrollInCourse(course.id)" class="text-white text-decoration-none">
-                  Enroll
-                </a>
-    </button> -->
+    @if(authservice.isStudent())
+    {
+      <button class="btn btn-primary">
+        <a routerLink = "/Courses/EnrollCourse" class="text-white text-decoration-none">
+          Enroll Courses 
+        </a>
+      </button>
+    }
   </div>
+  <router-outlet> </router-outlet>
+  <br>
 
   <!-- Courses -->
   <div class="row g-4">
@@ -49,33 +54,30 @@
             <div class="d-flex gap-2 mt-auto">
 
               <button class="btn btn-success">
-                <a routerLink = "/AssignmentDetails/{{ course.id }}" class="text-white text-decoration-none">
+                <a routerLink = "/Courses/AssignmentDetails/{{ course.id }}" class="text-white text-decoration-none">
                   Assignments
                 </a>
               </button>
+              @if(authservice.isAdmin())
+              {
 
-              <button class="btn btn-secondary">
-                <a routerLink = "/EditCourse/{{ course.id }}" class="text-white text-decoration-none">
-                  Edit
-                </a>
-              </button>
-
-              <button class="btn btn-danger">
-                <a (click)="DeleteCourse(course.id)" class="text-white text-decoration-none">
-                  Delete
-                </a>
-              </button>
+                <button class="btn btn-secondary">
+                  <a routerLink = "/Courses/EditCourse/{{ course.id }}" class="text-white text-decoration-none">
+                    Edit
+                  </a>
+                </button>
+                
+                <button class="btn btn-danger">
+                  <a (click)="DeleteCourse(course.id)" class="text-white text-decoration-none">
+                    Delete
+                  </a>
+                </button>
+              }
             </div>
-
-
-
           </div>
-
         </div>
       </div>
-
     }
-
   </div>
-
 </div>
+

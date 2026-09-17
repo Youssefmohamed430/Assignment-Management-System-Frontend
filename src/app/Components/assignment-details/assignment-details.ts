@@ -3,6 +3,7 @@ import { IAssigment } from '../../models/iassigment';
 import { AssignmentService } from '../../Services/assignment-service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { AuthService } from '../../Services/auth-service';
 
 
 @Component({
@@ -15,7 +16,7 @@ export class AssignmentDetails {
   AssignmentList:IAssigment[] | undefined;
   CourseId: number = 0;
 
-  constructor(private assignmentService: AssignmentService,private route: ActivatedRoute) { }
+  constructor(private assignmentService: AssignmentService,private route: ActivatedRoute,public authservice:AuthService) { }
 
   ngOnInit() {
     this.CourseId = Number(this.route.snapshot.paramMap.get('id'));

@@ -2,11 +2,14 @@
 
   <!-- Add Assignment -->
   <div class="d-flex justify-content-end mb-4">
-    <button class="btn btn-primary">
-        <a routerLink = "/AddAssignment/{{ CourseId }}" class="text-white text-decoration-none">
-            Add Assignment
+    @if(authservice.isInstructor())
+    {
+      <button class="btn btn-primary">
+        <a [routerLink]="['/Courses/AssignmentDetails', CourseId, 'AddAssignment']" class="text-white text-decoration-none">
+          Add Assignment
         </a>
-    </button>
+      </button>
+    }
   </div>
 
   <!-- Assignments -->
@@ -42,40 +45,48 @@
               >
                 View
               </a>
+              @if(authservice.isInstructor())
+              {
 
-              <a
-                [routerLink]="['/EditAssignment', assignment.id]"
-                class="btn btn-success flex-fill"
-              >
-                Edit
-              </a>
-
-              <button
-                type="button"
-                class="btn btn-danger flex-fill"
-                (click)="DeleteAssignment(assignment.id)"
-              >
-                Delete
-              </button>
-
-              <button
-                type="button"
-                class="btn btn-success flex-fill"
-                routerLink = "/SubmitAssignment/{{ assignment.id }}"
-              >
-                Submit
-              </button>
-
+                  <a
+                    [routerLink]="[
+                    '/Courses/AssignmentDetails',
+                    CourseId,
+                    'EditAssignment',
+                    assignment.id
+                    ]"
+                    class="btn btn-success flex-fill"
+                    >
+                    Edit
+                  </a>
+                  
+                  <button
+                  type="button"
+                  class="btn btn-danger flex-fill"
+                  (click)="DeleteAssignment(assignment.id)"
+                  >
+                  Delete
+                </button>
+              }
+              @if(authservice.isStudent())
+              {
+                  <button
+                    type="button"
+                    class="btn btn-success flex-fill"
+                    [routerLink]="[
+                      '/Courses/AssignmentDetails',
+                      CourseId,
+                      'SubmitAssignment',
+                      assignment.id
+                    ]"
+                    >
+                    Submit
+                  </button>
+              }
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     }
-
   </div>
-
 </div>
