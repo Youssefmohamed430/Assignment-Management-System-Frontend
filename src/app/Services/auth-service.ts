@@ -1,21 +1,25 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+
+  constructor(private httpclient:HttpClient) {}
+
   LoginUser(User:User) {
-    // API Call to login User
+    // return this.httpclient.post($"{{environment.}}")
     return true;
   }
 
   getUserLogged() {
-    return true;
+    return false;
   }
 
   getRole() {
-    return 'Admin';
+    return '';
   }
 
   isAdmin(): boolean {

@@ -1,10 +1,12 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
 
+    <!-- Brand -->
     <a class="navbar-brand" routerLink="/Home">
       Assignment Manager
     </a>
 
+    <!-- Toggler -->
     <button
       class="navbar-toggler"
       type="button"
@@ -17,11 +19,13 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!-- Navbar Content -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
       <!-- Left Side -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
+        <!-- Home -->
         <li class="nav-item">
           <a
             class="nav-link active"
@@ -31,72 +35,115 @@
           </a>
         </li>
 
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/Courses">
-            Courses
-          </a>
-        </li>
-        @if(authservice.isInstructor()){
-              <li class="nav-item">
-                <a
+        <!-- Authenticated User -->
+        @if (authservice.getUserLogged()) {
+
+          <!-- Courses -->
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              routerLink="/Courses">
+              Courses
+            </a>
+          </li>
+
+          <!-- Instructor -->
+          @if (authservice.isInstructor()) {
+
+            <!-- Students -->
+            <li class="nav-item">
+              <a
                 class="nav-link"
                 routerLink="/Students">
                 Students
               </a>
             </li>
+
+            <!-- Submissions -->
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLink="/Submissions">
+                Submissions
+              </a>
+            </li>
+
+          }
+
         }
-        @if(authservice.isInstructor()){
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              routerLink="/Submissions">
-              Submissions
-            </a>
-          </li>
-        }
+
       </ul>
-      
+
+
       <!-- Right Side -->
       <div class="d-flex align-items-center gap-3">
-        <!-- Notifications -->
-        <div class="position-relative">
-          <button
-            type="button"
-            class="btn btn-outline-primary"
-            (click)="toggleNotifications()">
-            🔔
-          </button>
-          <!-- Notifications Dropdown -->
-          @if (showNotifications) {
-            <div
-              class="dropdown-menu show position-absolute end-0 mt-2 p-0 shadow"
-              style="width: 320px;">
 
-              <div class="p-3 border-bottom fw-bold">
-                Notifications
-              </div>
-              @for(notification of notifications; track notification.id) {
+        @if (authservice.getUserLogged()) {
 
-                <div class="notification-item p-3 border-bottom">
-                  <p class="mb-0 text-muted small">
-                    {{ notification.message }}
-                  </p>
-                  <small class="text-muted">
-                    {{ notification.date | date:'short' }}
-                  </small>
-                  <button
-                    class="btn btn-sm btn-outline-success ms-3"
-                    (click)="markAsRead(notification.id)">
-                      ✓
-                  </button>
+          <!-- Notifications -->
+          <div class="position-relative">
+
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              (click)="toggleNotifications()">
+              🔔
+            </button>
+
+            <!-- Notifications Dropdown -->
+            @if (showNotifications) {
+
+              <div
+                class="dropdown-menu show position-absolute end-0 mt-2 p-0 shadow"
+                style="width: 320px;">
+
+                <div class="p-3 border-bottom fw-bold">
+                  Notifications
                 </div>
-              }
-            </div>
-          }
-        </div>
+
+                @for (notification of notifications; track notification.id) {
+
+                  <div class="notification-item p-3 border-bottom">
+
+                    <p class="mb-0 text-muted small">
+                      {{ notification.message }}
+                    </p>
+
+                    <small class="text-muted">
+                      {{ notification.date | date:'short' }}
+                    </small>
+
+                    <button
+                      class="btn btn-sm btn-outline-success ms-3"
+                      (click)="markAsRead(notification.id)">
+                      ✓
+                    </button>
+
+                  </div>
+
+                }
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+        @else {
+
+          <!-- Login Button -->
+          <a
+            class="btn btn-primary"
+            routerLink="/Login">
+            Login
+          </a>
+
+        }
+
       </div>
+
     </div>
+
   </div>
 </nav>
