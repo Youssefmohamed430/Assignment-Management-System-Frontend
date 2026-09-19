@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { ICourse } from '../../models/ICourse';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CourseService } from '../../Services/course-service';
-import { adminguardGuard } from '../../guards/adminguard-guard';
 import { AuthService } from '../../Services/auth-service';
 
 @Component({
