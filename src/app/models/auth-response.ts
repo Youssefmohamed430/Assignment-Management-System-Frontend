@@ -1,4 +1,4 @@
-export class LoginResponse {
+export class AuthResponse {
   id: string = '';
   message: string | null = null;
   isAuthenticated: boolean = false;

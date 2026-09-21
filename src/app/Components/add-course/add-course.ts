@@ -1,18 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ICategory } from '../../models/ICategory';
+import { InstructorService } from '../../Services/instructor-service';
+import { CourseService } from '../../Services/course-service';
+import { Instructor } from '../../models/instructor';
+import { ICourse } from '../../models/ICourse';
+import { FormsModule } from '@angular/forms';
+import { ResponseModel } from '../../models/response-model';
 
 @Component({
   selector: 'app-add-course',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './add-course.html',
   styleUrl: './add-course.css',
 })
 export class AddCourse {
-  CategoriesList: ICategory[] = [
-    {id:1, categoryCode:'CAT001', categoryName:'Category 1'},
-    {id:2, categoryCode:'CAT002', categoryName:'Category 2'},
-    {id:3, categoryCode:'CAT003', categoryName:'Category 3'},
-    {id:4, categoryCode:'CAT004', categoryName:'Category 4'},
-    {id:5, categoryCode:'CAT005', categoryName:'Category 5'},
-  ];
+  InstructorList!:Instructor[];
+  Course!:ICourse;
+  constructor(private instructorService:InstructorService,private courseservice:CourseService) { this.getInstructors(); }
+
+  getInstructors() {
+    this.instructorService.getInstructors().subscribe({
+          next: (InstructorRes: ResponseModel<Instructor[]>) => {
+            this.InstructorList = InstructorRes.result;
+          },
+
+          error: (error) => {
+            console.error('Error getting instructors:', error);
+          }
+      });
+  }
+
+  
+
+  AddCourse() {
+
+  }
 }

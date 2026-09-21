@@ -80,6 +80,13 @@
 
         @if (authservice.getUserLogged()) {
 
+          <!-- Logout Button -->
+              <a
+                class="btn btn-primary"
+                (click)="Logout()">
+                Logout
+              </a>
+
           <!-- Notifications -->
           <div class="position-relative">
 

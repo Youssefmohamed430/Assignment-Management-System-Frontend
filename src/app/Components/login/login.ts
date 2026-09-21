@@ -4,7 +4,7 @@ import { User } from '../../models/user';
 import { AuthService } from '../../Services/auth-service';
 import { LoginUser } from '../../models/login-user';
 import { FormsModule } from '@angular/forms';
-import { LoginResponse } from '../../models/login-response';
+import { AuthResponse } from '../../models/auth-response';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +21,7 @@ export class Login {
 
     this.authservice.LoginUser(this.User).subscribe({
 
-      next: (response: LoginResponse) => {
+      next: (response: AuthResponse) => {
 
         console.log('Login Response:', response);
 

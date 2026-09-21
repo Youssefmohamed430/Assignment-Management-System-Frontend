@@ -29,4 +29,9 @@ export class Navbar {
     this.notificationService.markAsRead(notificationId);
     this.notifications = this.notificationService.getNotifications();
   }
+
+  public Logout() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+  }
 }

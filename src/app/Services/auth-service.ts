@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { LoginUser } from '../models/login-user';
-import { LoginResponse } from '../models/login-response';
+import { AuthResponse } from '../models/auth-response';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
+import { RegisterUser } from '../models/register-user';
 
 @Injectable({
   providedIn: 'root',
@@ -13,12 +14,19 @@ export class AuthService {
 
   constructor(private httpclient:HttpClient) {}
 
-  LoginUser(user: LoginUser): Observable<LoginResponse> {
+  LoginUser(user: LoginUser): Observable<AuthResponse> {
 
-    return this.httpclient.post<LoginResponse>(
+    return this.httpclient.post<AuthResponse>(
       `${environment.baseurl}/Auth/Login`,
       user
     );
+  }
+
+  RegisterUser(registeredUser:RegisterUser) : Observable<AuthResponse> {
+    return this.httpclient.post<AuthResponse>(
+      `${environment.baseurl}/Auth/RegisterUser`,
+      registeredUser
+    )
   }
 
   getUserLogged() {
@@ -33,7 +41,7 @@ export class AuthService {
       return '';
     }
 
-    const userData: LoginResponse = JSON.parse(user);
+    const userData: AuthResponse = JSON.parse(user);
 
     return userData.roles[0] ?? '';
   }

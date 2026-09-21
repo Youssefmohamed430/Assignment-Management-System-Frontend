@@ -1,7 +1,9 @@
 export class ICourse {
   id: number = 0;
-  CourseCode: string = '';
-  name: string = '';
-  description: string = '';
-  Category: string = '';
+  CrsName: string = '';
+  InstId: string = '';
+  InstName: string = '';
+  ImageFile?:File;
+  ImageName:string='';
+  ImageUrl:string='';
 }
