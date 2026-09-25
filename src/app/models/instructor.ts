@@ -1,5 +1,5 @@
 export class Instructor {
-    id!:number;
-    Name!:string;
-    ImageFile!:File;
+    id!:string;
+    name!:string;
+    imageFile!:File;
 }

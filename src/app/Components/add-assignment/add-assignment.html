@@ -1,13 +1,23 @@
-<form>
+<form (submit)="AddAssignment()">
   <fieldset >
     <legend>Add Assignment</legend>
     <div class="mb-3">
       <label for="assignmentName" class="form-label">Assignment Title</label>
-      <input type="text" id="assignmentName" class="form-control" placeholder="Assignment title">
+      <input type="text" id="assignmentName" class="form-control" 
+      placeholder="Assignment title" [(ngModel)]="assignment.title"
+      name="title">
     </div>
     <div class="mb-3">
       <label for="assignmentDescription" class="form-label">Assignment Deadline</label>
-      <input type="date" id="assignmentDescription" class="form-control" placeholder="Assignment date">
+      <input type="date" id="assignmentDescription" class="form-control" 
+      placeholder="Assignment date" [(ngModel)]="assignment.deadline"
+      name="deadline">
+    </div>
+    <div class="mb-3">
+      <label for="assignmentfile" class="form-label">Assignment File</label>
+      <input type="file" id="assignmentfile" class="form-control" 
+      placeholder="Assignment file" [(ngModel)]="assignment.assignmentFile"
+      name="file">
     </div>
     
     <button type="submit" class="btn btn-primary">Submit</button>

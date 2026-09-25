@@ -22,7 +22,7 @@ export class Courses {
         next: (CourseRes: ResponseModel<ICourse[]>) => {
 
           this.CoursesList = CourseRes.result;
-
+          console.log(this.CoursesList);
         },
 
         error: (error) => {

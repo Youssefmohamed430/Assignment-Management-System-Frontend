@@ -15,8 +15,19 @@ import { ResponseModel } from '../../models/response-model';
 })
 export class AddCourse {
   InstructorList!:Instructor[];
-  Course!:ICourse;
+  Course:ICourse = new ICourse ;
+  selectedFile?: File;
   constructor(private instructorService:InstructorService,private courseservice:CourseService) { this.getInstructors(); }
+
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+    }
+  }
+
 
   getInstructors() {
     this.instructorService.getInstructors().subscribe({
@@ -27,12 +38,19 @@ export class AddCourse {
           error: (error) => {
             console.error('Error getting instructors:', error);
           }
-      });
+      });    
   }
 
   
 
   AddCourse() {
-
+    this.courseservice.addCourse(this.Course).subscribe({
+      next: (response) => {
+        console.log('Course added successfully', response);
+      },
+      error: (error) => {
+        console.error('Error adding course:', error);
+      }
+    });
   }
 }

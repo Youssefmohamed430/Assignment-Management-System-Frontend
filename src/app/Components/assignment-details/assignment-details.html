@@ -5,7 +5,7 @@
     @if(authservice.isInstructor())
     {
       <button class="btn btn-primary">
-        <a [routerLink]="['/Courses/AssignmentDetails', CourseId, 'AddAssignment']" class="text-white text-decoration-none">
+        <a [routerLink]="['/Courses/AssignmentDetails', crsid, 'AddAssignment']" class="text-white text-decoration-none">
           Add Assignment
         </a>
       </button>
@@ -15,7 +15,7 @@
   <!-- Assignments -->
   <div class="row g-4">
 
-    @for (assignment of AssignmentList; track assignment.id) {
+    @for (assignment of AssignmentList; track assignment.assignmentId) {
 
       <div class="col-lg-4 col-md-6 col-12">
 
@@ -39,21 +39,22 @@
             <!-- Buttons -->
             <div class="d-flex gap-2 mt-auto">
 
-              <a
-                [routerLink]="['/ViewAssignment', assignment.id]"
+              <button
+                type="button"
                 class="btn btn-primary flex-fill"
-              >
-                View
-              </a>
+                (click)="ViewAssignmentFile(assignment.assignmentId)">
+                View File
+              </button>
+
               @if(authservice.isInstructor())
               {
 
                   <a
                     [routerLink]="[
                     '/Courses/AssignmentDetails',
-                    CourseId,
+                    crsid,
                     'EditAssignment',
-                    assignment.id
+                    assignment.assignmentId
                     ]"
                     class="btn btn-success flex-fill"
                     >
@@ -63,7 +64,7 @@
                   <button
                   type="button"
                   class="btn btn-danger flex-fill"
-                  (click)="DeleteAssignment(assignment.id)"
+                  (click)="DeleteAssignment(assignment.assignmentId)"
                   >
                   Delete
                 </button>
@@ -75,9 +76,9 @@
                     class="btn btn-success flex-fill"
                     [routerLink]="[
                       '/Courses/AssignmentDetails',
-                      CourseId,
+                      crsid,
                       'SubmitAssignment',
-                      assignment.id
+                      assignment.assignmentId
                     ]"
                     >
                     Submit

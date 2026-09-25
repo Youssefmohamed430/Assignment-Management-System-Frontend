@@ -21,6 +21,6 @@ export class EditAssignment {
     // Logic to update the assignment can be implemented here
   }
   constructor(private assignmentService: AssignmentService, private route: ActivatedRoute) {
-    this.assignment = assignmentService.getAssignmentById(Number(this.route.snapshot.paramMap.get('id'))) as IAssigment;
+    // this.assignment = assignmentService.getAssignmentById(Number(this.route.snapshot.paramMap.get('id'))) as IAssigment;
   }
 }

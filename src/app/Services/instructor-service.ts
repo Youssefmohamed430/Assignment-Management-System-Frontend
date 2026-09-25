@@ -13,6 +13,7 @@ export class InstructorService {
   constructor(private httpclient:HttpClient) {}
 
   public getInstructors() : Observable<ResponseModel<Instructor[]>> {
-    return this.httpclient.get<ResponseModel<Instructor[]>>(`${environment.baseurl}/Instructor`);
+    return this.httpclient.get<ResponseModel<Instructor[]>>
+    (`${environment.baseurl}/Instructor`);
   }
 }

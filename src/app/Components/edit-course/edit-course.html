@@ -1,20 +1,21 @@
-<form>
+<form #EditForm="ngForm" (submit)="EditCourse()">
   <fieldset >
     <legend>Edit Course</legend>
     <div class="mb-3">
       <label for="courseName" class="form-label">Course Name</label>
-      <input type="text" id="courseName" class="form-control" placeholder="Course name" value="{{ course?.CrsName }}">
+      <input type="text" id="courseName" class="form-control" placeholder="Course name" 
+      value="{{ course?.crsName }}" [(ngModel)]="course.crsName" name="crsname">
     </div>
-    <div class="mb-3">
+    <!-- <div class="mb-3">
       <label for="courseDescription" class="form-label">Course Description</label>
-        <textarea class="form-control" id="courseDescription" rows="3" placeholder="Course description">{{ course?.InstName }}</textarea>
-    </div>
+       <input> Image 
+    </div> -->
     <div class="mb-3">
-      <label for="courseCategory" class="form-label">Category</label>
-      <select id="courseCategory" class="form-select">
-        @for (category of CategoryList; track category.id) {
-          <option value="{{ category.id }}" >
-            {{ category.categoryName }}
+      <label for="courseInstructor" class="form-label">Instructor</label>
+      <select id="courseInstructor" class="form-select" [(ngModel)]="course.instId" name="crsinst">
+        @for (inst of InstructorList; track inst.id) {
+          <option value="{{ inst.id }}" >
+            {{ inst.name }}
           </option>
         }
       </select>

@@ -13,11 +13,19 @@ export class CourseService {
   CoursesList:ICourse[] = [];
   constructor(private httpclient:HttpClient) {}
 
-  public addCourse(course:ICourse) {
-    this.httpclient.post<CourseResponse>(
+  public addCourse(course: ICourse): Observable<CourseResponse> {
+    return this.httpclient.post<CourseResponse>(
       `${environment.baseurl}/Course`,
       course
-    )
+    );
+  }
+
+    
+  public EditCourse(course: ICourse,id:number): Observable<CourseResponse> {
+    return this.httpclient.put<CourseResponse>(
+      `${environment.baseurl}/Course/${id}`,
+      course
+    );
   }
 
   public getCourses(): Observable<ResponseModel<ICourse[]>> {
@@ -26,8 +34,9 @@ export class CourseService {
     );
   }
 
-  public getCourseById(id: number) : ICourse | undefined  {
-    return this.CoursesList.find(course => course.id === id);
+  public getCourseById(id: number) : Observable<ResponseModel<ICourse>> {
+    return this.httpclient.get<ResponseModel<ICourse>>(
+      `${environment.baseurl}/Course/${id}`);
   }
 
   public DeleteCourse(id: number) {

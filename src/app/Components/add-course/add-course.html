@@ -1,4 +1,4 @@
-<form (submit)="AddCourse()">
+<form #AddCourseForm="ngForm" (submit)="AddCourse()" >
   <fieldset >
     <legend>Add Course</legend>
     <div class="mb-3">
@@ -6,20 +6,23 @@
       <input type="text" id="courseName" 
       class="form-control" placeholder="Course name"
       name="CrsName"
-      [(ngModel)] = "Course.CrsName">
+      [(ngModel)] = "Course.crsName">
     </div>
     <div class="mb-3">
       <label for="courseImage" class="form-label">Course Image</label>
-      <input type="file" id="courseImage" 
-      class="form-control" placeholder="Course Image"
-      name="Image"
-      [(ngModel)] = "Course.ImageFile">
+      <input
+        type="file"
+        id="courseImage"
+        class="form-control"
+        name="Image"
+        (change)="onFileSelected($event)"
+      >
     </div>
     <div class="mb-3">
       <label for="courseCategory" class="form-label">Instructor</label>
-      <select id="courseCategory" class="form-select" name="Instructor" [(ngModel)]="Course.InstId">
+      <select id="courseCategory" class="form-select" name="Instructor" [(ngModel)]="Course.instId">
         @for (inst of InstructorList; track inst.id) {
-          <option value="{{ inst.id }}">{{ inst.Name }}</option>
+          <option value="{{ inst.id }}">{{ inst.name }}</option>
         }
       </select>
     </div>
