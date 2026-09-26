@@ -5,6 +5,7 @@ import { CourseResponse } from '../models/course-response';
 import { environment } from '../../environments/environment.development';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../models/response-model';
+import { CourseEnrollDto } from '../models/course-enroll-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -39,11 +40,11 @@ export class CourseService {
       `${environment.baseurl}/Course/${id}`);
   }
 
-  public DeleteCourse(id: number) {
-    // Call the API to delete the course with the given id
+  public DeleteCourse(id: number) : Observable<ResponseModel<ICourse>> {
+    return this.httpclient.delete<ResponseModel<ICourse>>(`${environment.baseurl}/Courses/${id}`);
   }
 
-  public EnrollInCourse(id: number) {
-    // Call the API to enroll in the course with the given id
+  public EnrollInCourse(courseEnrollDto:CourseEnrollDto) {
+    return this.httpclient.post<ResponseModel<ICourse>>(`${environment.baseurl}/Courses/EnrollCourse`,courseEnrollDto);
   }
 }

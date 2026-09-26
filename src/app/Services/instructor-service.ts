@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Instructor } from '../models/instructor';
 import { environment } from '../../environments/environment.development';
 import { ResponseModel } from '../models/response-model';
+import { ICourse } from '../models/ICourse';
 
 @Injectable({
   providedIn: 'root',
@@ -16,4 +17,9 @@ export class InstructorService {
     return this.httpclient.get<ResponseModel<Instructor[]>>
     (`${environment.baseurl}/Instructor`);
   }
+
+  public getCoursesForInstructor() : Observable<ResponseModel<ICourse[]>> {
+      return this.httpclient.get<ResponseModel<ICourse[]>>(
+        `${environment.baseurl}/Instructor/InstructorCourses`);
+    }
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CourseService } from '../../Services/course-service';
 import { ICourse } from '../../models/ICourse';
 import { ResponseModel } from '../../models/response-model';
+import { CourseEnrollDto } from '../../models/course-enroll-dto';
 
 @Component({
   selector: 'app-enroll-course',
@@ -11,13 +12,15 @@ import { ResponseModel } from '../../models/response-model';
 })
 export class EnrollCourse {
     CoursesList!: ICourse[] ;
+    courseEnrolled : CourseEnrollDto = new CourseEnrollDto;
     constructor(private courseservice: CourseService) { 
       this.getCourses();
     }
   
-    EnrollInCourse(id: number) {
-      this.courseservice.EnrollInCourse(id);
-      this.getCourses();
+    EnrollInCourse(id:number,crsName:string) {
+      this.courseEnrolled.crsId = id;
+      this.courseEnrolled.crsName = crsName;
+      this.courseservice.EnrollInCourse(this.courseEnrolled);
     }
 
     public getCourses() {
