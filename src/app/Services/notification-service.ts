@@ -1,21 +1,26 @@
 import { Injectable } from '@angular/core';
-import { notification } from '../models/notification';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { NotificationItem } from '../models/notification';
+import { ResponseModel } from '../models/response-model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  private notifications: notification[] = [
-    { id: 1, message: 'New assignment available', date: new Date() },
-    { id: 2, message: 'Assignment deadline approaching', date: new Date() },
-    { id: 3, message: 'Course enrollment successful', date: new Date() },
-  ];
-  
-  getNotifications(): notification[] {
-    return this.notifications;
+  constructor(private httpclient: HttpClient) {}
+
+  getNotifications(): Observable<ResponseModel<NotificationItem[]>> {
+    return this.httpclient.get<ResponseModel<NotificationItem[]>>(
+      `${environment.baseUrl}/Notification`
+    );
   }
 
-  public markAsRead(notificationId: number): void {
-    const notification = this.notifications.find(n => n.id === notificationId);
+  markAsRead(notificationId: number): Observable<ResponseModel<unknown>> {
+    return this.httpclient.put<ResponseModel<unknown>>(
+      `${environment.baseUrl}/Notification/MarkasRead/${notificationId}`,
+      {}
+    );
   }
 }

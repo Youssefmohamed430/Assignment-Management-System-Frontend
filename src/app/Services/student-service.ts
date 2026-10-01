@@ -3,40 +3,51 @@ import { Student } from '../models/student';
 import { HttpClient } from '@angular/common/http';
 import { ResponseModel } from '../models/response-model';
 import { ICourse } from '../models/ICourse';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { AssignmentSubsDetails } from '../models/assignment-subs-details';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentService {
-  StudentList:Student[] = [
-    {id:1,name:'Student1',email:'Student1@gmail.com'},
-    {id:2,name:'Student2',email:'Student2@gmail.com'},
-    {id:3,name:'Student3',email:'Student3@gmail.com'},
-    {id:4,name:'Student4',email:'Student4@gmail.com'},
-    {id:5,name:'Student5',email:'Student5@gmail.com'},
-  ];
+  constructor(private httpclient: HttpClient) {}
 
-  constructor(private httpclient:HttpClient) {}
-
-  getStudents()
-  {
-    return this.StudentList;
+  public GetCourseEnrollments(): Observable<ResponseModel<ICourse[]>> {
+    return this.httpclient.get<ResponseModel<ICourse[]>>(
+      `${environment.baseUrl}/Student`
+    );
   }
 
-  public GetCourseEnrollments() : Observable<ResponseModel<ICourse[]>>{
-    return this.httpclient.get<ResponseModel<ICourse[]>>(`${environment.baseurl}/Student`);
+  public getSubmitDetails(
+    assignId: number
+  ): Observable<ResponseModel<AssignmentSubsDetails>> {
+    return this.httpclient.get<ResponseModel<AssignmentSubsDetails>>(
+      `${environment.baseUrl}/Student/SubmitDetails?assignid=${assignId}`
+    );
   }
 
-  searchStudents(searchText: string): Student[] {
+  public searchStudentByName(
+    name: string
+  ): Observable<ResponseModel<Student>> {
+    return this.httpclient.get<ResponseModel<Student>>(
+      `${environment.baseUrl}/Student/${encodeURIComponent(name)}`
+    );
+  }
 
-    if (!searchText.trim()) {
-      return this.StudentList;
-    }
+  public uploadProfileImage(image: File): Observable<ResponseModel<Student>> {
+    const formData = new FormData();
+    formData.append('Image', image);
+    return this.httpclient.put<ResponseModel<Student>>(
+      `${environment.baseUrl}/Student/ProfileImage`,
+      formData
+    );
+  }
 
-    return this.StudentList.filter(student =>
-      student.name.toLowerCase().includes(searchText.toLowerCase())
+  public getProfileImage(studentId: string): Observable<Blob> {
+    return this.httpclient.get(
+      `${environment.baseUrl}/Student/ProfileImage/${studentId}`,
+      { responseType: 'blob' }
     );
   }
 }

@@ -1,25 +1,58 @@
-<form (submit)="AddAssignment()">
-  <fieldset >
-    <legend>Add Assignment</legend>
+<div class="form-shell">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">Add Assignment</h1>
+    <a
+      [routerLink]="['/Courses/AssignmentDetails', courseId]"
+      class="btn btn-outline-light btn-sm"
+    >
+      Back
+    </a>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  <form (submit)="AddAssignment(); $event.preventDefault()" class="surface-card p-4">
     <div class="mb-3">
       <label for="assignmentName" class="form-label">Assignment Title</label>
-      <input type="text" id="assignmentName" class="form-control" 
-      placeholder="Assignment title" [(ngModel)]="assignment.title"
-      name="title">
+      <input
+        type="text"
+        id="assignmentName"
+        class="form-control"
+        placeholder="Assignment title"
+        [(ngModel)]="assignment.title"
+        name="title"
+        required
+      />
     </div>
+
     <div class="mb-3">
-      <label for="assignmentDescription" class="form-label">Assignment Deadline</label>
-      <input type="date" id="assignmentDescription" class="form-control" 
-      placeholder="Assignment date" [(ngModel)]="assignment.deadline"
-      name="deadline">
+      <label for="assignmentDeadline" class="form-label">Deadline</label>
+      <input
+        type="date"
+        id="assignmentDeadline"
+        class="form-control"
+        [(ngModel)]="assignment.deadLine"
+        name="deadline"
+        required
+      />
     </div>
-    <div class="mb-3">
-      <label for="assignmentfile" class="form-label">Assignment File</label>
-      <input type="file" id="assignmentfile" class="form-control" 
-      placeholder="Assignment file" [(ngModel)]="assignment.assignmentFile"
-      name="file">
+
+    <div class="mb-4">
+      <label for="assignmentfile" class="form-label">
+        File (pdf/doc/zip/code/images, max 10 MB)
+      </label>
+      <input
+        type="file"
+        id="assignmentfile"
+        class="form-control"
+        (change)="onFileSelected($event)"
+        name="file"
+        required
+      />
     </div>
-    
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </fieldset>
-</form>
+
+    <button type="submit" class="btn btn-accent">Create Assignment</button>
+  </form>
+</div>

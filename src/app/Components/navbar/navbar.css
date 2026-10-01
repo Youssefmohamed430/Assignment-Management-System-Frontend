@@ -1,0 +1,7 @@
+.navbar .btn {
+  transition: transform 0.15s ease;
+}
+
+.navbar .btn:active {
+  transform: scale(0.97);
+}

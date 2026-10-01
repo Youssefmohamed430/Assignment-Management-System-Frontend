@@ -1,0 +1,43 @@
+<div class="form-shell">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">Profile</h1>
+    <a routerLink="/Courses" class="btn btn-outline-light btn-sm">Courses</a>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+  @if (successMessage) {
+    <div class="alert alert-success">{{ successMessage }}</div>
+  }
+
+  <div class="surface-card p-4">
+    <div class="d-flex flex-wrap gap-4 align-items-center mb-4">
+      <div class="profile-avatar">
+        @if (imageUrl) {
+          <img [src]="imageUrl" alt="Profile" />
+        } @else {
+          <div class="profile-avatar-fallback">{{ username.slice(0, 1) | uppercase }}</div>
+        }
+      </div>
+      <div>
+        <h2 class="h4 mb-1">{{ username }}</h2>
+        <p class="text-muted-custom mb-1">{{ email }}</p>
+        <p class="mb-0"><span class="badge text-bg-secondary">{{ role }}</span></p>
+      </div>
+    </div>
+
+    <div class="mb-0">
+      <label class="form-label" for="profileImage">
+        Update profile image (jpg/png/webp, max 5 MB)
+      </label>
+      <input
+        id="profileImage"
+        type="file"
+        class="form-control"
+        accept=".jpg,.jpeg,.png,.webp"
+        (change)="onFileSelected($event)"
+      />
+    </div>
+  </div>
+</div>

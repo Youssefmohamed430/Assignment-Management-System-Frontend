@@ -1,15 +1,45 @@
-<form>
-  <fieldset >
-    <legend>Add Assignment</legend>
+<div class="form-shell">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">Submit Assignment</h1>
+    <a
+      [routerLink]="['/Courses/AssignmentDetails', courseId]"
+      class="btn btn-outline-light btn-sm"
+    >
+      Back
+    </a>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+  @if (successMessage) {
+    <div class="alert alert-success">{{ successMessage }}</div>
+  }
+
+  <form (submit)="submit(); $event.preventDefault()" class="surface-card p-4">
     <div class="mb-3">
-      <label for="assignmentDescription" class="form-label">Assignment Title</label>
-      <input type="text" id="assignmentDescription" class="form-control" placeholder="Assignment title">
+      <label class="form-label">Assignment</label>
+      <input
+        type="text"
+        class="form-control"
+        [value]="assignmentTitle"
+        disabled
+      />
     </div>
-    <div class="mb-3">
-      <label for="assignmentName" class="form-label">Assignment File</label>
-      <input type="file" id="assignmentName" class="form-control" placeholder="Assignment file">
+
+    <div class="mb-4">
+      <label for="submitFile" class="form-label">
+        Submission File (max 10 MB)
+      </label>
+      <input
+        type="file"
+        id="submitFile"
+        class="form-control"
+        (change)="onFileSelected($event)"
+        required
+      />
     </div>
-    
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </fieldset>
-</form>
+
+    <button type="submit" class="btn btn-accent">Submit</button>
+  </form>
+</div>

@@ -1,7 +1,9 @@
 export class IAssigment {
-    assignmentId: number = 0;
-    title: string = '';
-    deadline: Date = new Date();
-    assignmentFile!:File;
-    courseId: number = 0;
+  assignmentId: number = 0;
+  title: string = '';
+  deadLine: string = '';
+  crsId: number = 0;
+  crsName?: string = '';
+  fileName?: string = '';
+  assignmentFile?: File;
 }

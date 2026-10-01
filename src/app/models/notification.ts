@@ -1,5 +1,7 @@
-export class notification {
-    id: number = 0;
-    message: string = '';
-    date: Date = new Date();
+export class NotificationItem {
+  id: number = 0;
+  message: string = '';
+  isRead: boolean = false;
+  sendDate: string = '';
+  reciverId: string = '';
 }

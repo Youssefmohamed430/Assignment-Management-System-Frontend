@@ -1,21 +1,51 @@
 import { Component } from '@angular/core';
 import { IAssigment } from '../../models/iassigment';
 import { FormsModule } from '@angular/forms';
+import { AssignmentService } from '../../Services/assignment-service';
+import { ResponseModel } from '../../models/response-model';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-add-assignment',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './add-assignment.html',
   styleUrl: './add-assignment.css',
 })
 export class AddAssignment {
-  assignment:IAssigment = new IAssigment();
+  assignment: IAssigment = new IAssigment();
+  errorMessage = '';
+  courseId = 0;
 
-  constructor() {}
-
-  public AddAssignment(): void {
-    // Logic to add the assignment can be implemented here
+  constructor(
+    private assignmentservice: AssignmentService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+    this.courseId = Number(this.route.snapshot.params['id']);
   }
 
-  ngOnInit() {}
+  public AddAssignment() {
+    this.errorMessage = '';
+    this.assignment.crsId = this.courseId;
+    if (!this.assignment.assignmentFile) {
+      this.errorMessage = 'Assignment file is required';
+      return;
+    }
+    this.assignmentservice.addAssignment(this.assignment).subscribe({
+      next: (_response: ResponseModel<IAssigment>) => {
+        this.router.navigate(['/Courses/AssignmentDetails', this.courseId]);
+      },
+      error: (error) => {
+        this.errorMessage =
+          error?.error?.message || 'Failed to add assignment';
+      },
+    });
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.assignment.assignmentFile = input.files[0];
+    }
+  }
 }

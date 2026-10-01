@@ -7,46 +7,34 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
-  imports: [RouterLink,FormsModule],
+  imports: [RouterLink, FormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
 export class Register {
+  registeredUser: RegisterUser = new RegisterUser();
+  errorMessage = '';
 
-  registeredUser:RegisterUser = new RegisterUser();
+  constructor(
+    private authservice: AuthService,
+    private router: Router
+  ) {}
 
-  constructor(private authservice:AuthService,private router:Router) {}
-
-  RegisterUser()
-  {
-      this.authservice.RegisterUser(this.registeredUser).subscribe({
-
+  RegisterUser() {
+    this.errorMessage = '';
+    this.authservice.RegisterUser(this.registeredUser).subscribe({
       next: (response: AuthResponse) => {
-
-        console.log('Register Response:', response);
-
         if (response.isAuthenticated) {
-
-          // Save user data
-          localStorage.setItem(
-            'user',
-            JSON.stringify(response)
-          );
-
-          // Save token separately
-          localStorage.setItem(
-            'token',
-            response.token
-          );
-
-          // Based on Role
-          const role = response.roles[0];
-          this.router.navigateByUrl('/Home');
+          this.authservice.setSession(response);
+          this.router.navigateByUrl('/Courses');
+        } else {
+          this.errorMessage = response.message || 'Registration failed';
         }
       },
       error: (error) => {
-        console.error('Register Error:', error);
-      }
-    })
+        this.errorMessage =
+          error?.error?.message || error?.error?.Message || 'Registration failed';
+      },
+    });
   }
 }

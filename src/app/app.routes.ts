@@ -16,6 +16,8 @@ import { SubmitAssignment } from './Components/submit-assignment/submit-assignme
 import { Studentspage } from './Components/studentspage/studentspage';
 import { StudentDetails } from './Components/student-details/student-details';
 import { Submissions } from './Components/submissions/submissions';
+import { RegisterStudent } from './Components/register-student/register-student';
+import { Profile } from './Components/profile/profile';
 
 import { EnrollCourse } from './Components/enroll-course/enroll-course';
 
@@ -25,146 +27,115 @@ import { authGuardGuard } from './guards/auth-guard-guard';
 import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'Home',
+    pathMatch: 'full',
+  },
 
-  // Public Routes
   {
     path: 'Home',
-    component: Home
+    component: Home,
   },
 
   {
     path: 'Login',
-    component: Login
+    component: Login,
   },
 
   {
     path: 'Register',
-    component: Register
+    component: Register,
   },
 
+  {
+    path: 'Profile',
+    component: Profile,
+    canActivate: [authGuardGuard],
+  },
 
-  // Courses
   {
     path: 'Courses',
-
     children: [
-
-      // Any authenticated user
       {
         path: '',
         component: Courses,
-        canActivate: [authGuardGuard]
+        canActivate: [authGuardGuard],
       },
-
-
-      // Admin only
       {
         path: 'AddCourse',
         component: AddCourse,
         canActivate: [authGuardGuard, roleGuard],
-        data: {
-          role: 'Admin'
-        }
+        data: { role: 'Admin' },
       },
-
-      // Student only
       {
         path: 'EnrollCourse',
         component: EnrollCourse,
         canActivate: [authGuardGuard, roleGuard],
-        data: {
-          role: 'Student'
-        }
+        data: { role: 'Student' },
       },
-
-      // Admin only
       {
         path: 'EditCourse/:id',
         component: EditCourse,
         canActivate: [authGuardGuard, roleGuard],
-        data: {
-          role: 'Admin'
-        }
+        data: { role: 'Admin' },
       },
-
-      // Any authenticated user
       {
         path: 'AssignmentDetails/:id',
         component: AssignmentDetails,
-        canActivate: [authGuardGuard]
+        canActivate: [authGuardGuard],
       },
-
-      // Instructor only
       {
         path: 'AssignmentDetails/:id/AddAssignment',
         component: AddAssignment,
         canActivate: [authGuardGuard, roleGuard],
-        data: {
-          role: 'Instructor'
-        }
+        data: { role: 'Instructor' },
       },
-
-      // Instructor only
       {
         path: 'AssignmentDetails/:courseId/EditAssignment/:assignmentId',
         component: EditAssignment,
         canActivate: [authGuardGuard, roleGuard],
-        data: {
-          role: 'Instructor'
-        }
+        data: { role: 'Instructor' },
       },
-
-      // Student only
       {
         path: 'AssignmentDetails/:courseId/SubmitAssignment/:assignmentId',
         component: SubmitAssignment,
         canActivate: [authGuardGuard, roleGuard],
-        data: {
-          role: 'Student'
-        }
-      }
-
-    ]
+        data: { role: 'Student' },
+      },
+    ],
   },
 
-
-  // Instructor only
   {
     path: 'Students',
     component: Studentspage,
     canActivate: [authGuardGuard, roleGuard],
-    data: {
-      role: 'Instructor'
-    }
+    data: { role: 'Instructor' },
   },
 
-
-  // Instructor only
   {
-    path: 'ViewStudent/:id',
+    path: 'Students/Register',
+    component: RegisterStudent,
+    canActivate: [authGuardGuard, roleGuard],
+    data: { role: 'Instructor' },
+  },
+
+  {
+    path: 'ViewStudent/:name',
     component: StudentDetails,
     canActivate: [authGuardGuard, roleGuard],
-    data: {
-      role: 'Instructor'
-    }
+    data: { role: 'Instructor' },
   },
 
-
-  // Instructor only
   {
-    path: 'Submissions',
+    path: 'Submissions/:assignmentId',
     component: Submissions,
     canActivate: [authGuardGuard, roleGuard],
-    data: {
-      role: 'Instructor'
-    }
+    data: { role: 'Instructor' },
   },
 
-
-  // Not Found
   {
     path: '**',
-    component: Notfound
-  }
-
+    component: Notfound,
+  },
 ];

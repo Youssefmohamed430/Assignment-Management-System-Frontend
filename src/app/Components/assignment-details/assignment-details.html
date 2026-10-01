@@ -1,93 +1,106 @@
-<div class="container py-4">
-
-  <!-- Add Assignment -->
-  <div class="d-flex justify-content-end mb-4">
-    @if(authservice.isInstructor())
-    {
-      <button class="btn btn-primary">
-        <a [routerLink]="['/Courses/AssignmentDetails', crsid, 'AddAssignment']" class="text-white text-decoration-none">
-          Add Assignment
-        </a>
-      </button>
-    }
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+  <div>
+    <h1 class="page-title mb-1">Assignments</h1>
+    <p class="page-subtitle mb-0">Course assignments and actions</p>
   </div>
 
-  <!-- Assignments -->
-  <div class="row g-4">
+  @if (authservice.isInstructor()) {
+    <a
+      class="btn btn-accent"
+      [routerLink]="['/Courses/AssignmentDetails', crsid, 'AddAssignment']"
+    >
+      Add Assignment
+    </a>
+  }
+</div>
 
-    @for (assignment of AssignmentList; track assignment.assignmentId) {
+@if (errorMessage) {
+  <div class="alert alert-danger">{{ errorMessage }}</div>
+}
+@if (successMessage) {
+  <div class="alert alert-success">{{ successMessage }}</div>
+}
 
-      <div class="col-lg-4 col-md-6 col-12">
+<div class="row g-4">
+  @for (assignment of AssignmentList; track assignment.assignmentId) {
+    <div class="col-lg-4 col-md-6 col-12">
+      <div class="surface-card h-100 fade-in">
+        <div class="surface-card-body d-flex flex-column">
+          <h5 class="card-title">{{ assignment.title }}</h5>
+          <h6 class="text-muted-custom mb-3">
+            Deadline: {{ assignment.deadLine | date }}
+          </h6>
 
-        <div class="card h-100 shadow-sm">
+          @if (authservice.isStudent() && submitDetails[assignment.assignmentId]) {
+            <div class="mb-3 small">
+              <div>Submitted file: {{ submitDetails[assignment.assignmentId].fileName }}</div>
+              <div>
+                Grade:
+                {{
+                  submitDetails[assignment.assignmentId].grade != null
+                    ? submitDetails[assignment.assignmentId].grade
+                    : 'Pending'
+                }}
+              </div>
+            </div>
+          }
 
-          <div class="card-body d-flex flex-column">
+          <div class="d-flex flex-wrap gap-2 mt-auto">
+            <button
+              type="button"
+              class="btn btn-outline-light btn-sm"
+              (click)="ViewAssignmentFile(assignment.assignmentId)"
+            >
+              View File
+            </button>
 
-            <h5 class="card-title">
-              {{ assignment.title }}
-            </h5>
-
-            <h6 class="card-subtitle mb-3 text-muted">
-              Deadline: {{ assignment.deadline | date }}
-            </h6>
-
-            <p class="card-text mb-4">
-              Some quick example text to build on the card title
-              and make up the bulk of the card's content.
-            </p>
-
-            <!-- Buttons -->
-            <div class="d-flex gap-2 mt-auto">
-
+            @if (authservice.isInstructor()) {
+              <a
+                class="btn btn-outline-light btn-sm"
+                [routerLink]="[
+                  '/Courses/AssignmentDetails',
+                  crsid,
+                  'EditAssignment',
+                  assignment.assignmentId
+                ]"
+              >
+                Edit
+              </a>
+              <a
+                class="btn btn-outline-light btn-sm"
+                [routerLink]="['/Submissions', assignment.assignmentId]"
+              >
+                Submissions
+              </a>
               <button
                 type="button"
-                class="btn btn-primary flex-fill"
-                (click)="ViewAssignmentFile(assignment.assignmentId)">
-                View File
+                class="btn btn-danger-soft btn-sm"
+                (click)="DeleteAssignment(assignment.assignmentId)"
+              >
+                Delete
               </button>
+            }
 
-              @if(authservice.isInstructor())
-              {
-
-                  <a
-                    [routerLink]="[
-                    '/Courses/AssignmentDetails',
-                    crsid,
-                    'EditAssignment',
-                    assignment.assignmentId
-                    ]"
-                    class="btn btn-success flex-fill"
-                    >
-                    Edit
-                  </a>
-                  
-                  <button
-                  type="button"
-                  class="btn btn-danger flex-fill"
-                  (click)="DeleteAssignment(assignment.assignmentId)"
-                  >
-                  Delete
-                </button>
-              }
-              @if(authservice.isStudent())
-              {
-                  <button
-                    type="button"
-                    class="btn btn-success flex-fill"
-                    [routerLink]="[
-                      '/Courses/AssignmentDetails',
-                      crsid,
-                      'SubmitAssignment',
-                      assignment.assignmentId
-                    ]"
-                    >
-                    Submit
-                  </button>
-              }
-            </div>
+            @if (authservice.isStudent()) {
+              <a
+                class="btn btn-accent btn-sm"
+                [routerLink]="[
+                  '/Courses/AssignmentDetails',
+                  crsid,
+                  'SubmitAssignment',
+                  assignment.assignmentId
+                ]"
+              >
+                Submit
+              </a>
+            }
           </div>
         </div>
       </div>
-    }
-  </div>
+    </div>
+  } @empty {
+    <div class="col-12">
+      <div class="empty-state">No assignments found.</div>
+    </div>
+  }
 </div>

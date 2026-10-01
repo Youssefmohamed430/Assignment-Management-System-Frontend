@@ -1,41 +1,82 @@
-<h1>Submissions</h1>
-<br>
-  <!-- Submission -->
-  <div class="list-group">
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+  <div>
+    <h1 class="page-title mb-1">Submissions</h1>
+    <p class="page-subtitle mb-0">Assignment #{{ assignmentId }}</p>
+  </div>
+  <a routerLink="/Courses" class="btn btn-outline-light btn-sm">Back to Courses</a>
+</div>
 
-    @for (sub of submissionList; track sub.id) {
+@if (errorMessage) {
+  <div class="alert alert-danger">{{ errorMessage }}</div>
+}
+@if (successMessage) {
+  <div class="alert alert-success">{{ successMessage }}</div>
+}
 
-      <div
-        class="list-group-item d-flex justify-content-between align-items-center p-3">
-
-        <!-- Student Information -->
+<div class="surface-card mb-4">
+  <div class="list-group list-group-flush bg-transparent">
+    @for (sub of submissionList; track sub.submissionId) {
+      <div class="list-group-item bg-transparent text-light border-secondary d-flex flex-wrap justify-content-between align-items-center gap-3 p-3">
         <div>
-          <h5 class="mb-1">
-            {{ sub.filename }}
-          </h5>
-
-          <small class="text-muted">
-            {{ sub.SubmitDate | date}}
-          </small>
+          <h5 class="mb-1">{{ sub.stuname || 'Student' }}</h5>
+          <small class="text-muted-custom">{{ sub.fileName }}</small>
+          <div class="small mt-1">
+            Current grade: {{ sub.grade != null ? sub.grade : 'Not graded' }}
+          </div>
         </div>
 
-        <!-- View Button -->
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="ViewFile(sub.id)">
-          View
-        </button>
-
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          <input
+            type="number"
+            class="form-control form-control-sm grade-input"
+            min="0"
+            max="10"
+            step="0.5"
+            [(ngModel)]="gradeInputs[sub.submissionId!]"
+            [name]="'grade-' + sub.submissionId"
+          />
+          <button
+            type="button"
+            class="btn btn-accent btn-sm"
+            (click)="saveGrade(sub.submissionId!)"
+          >
+            Save Grade
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-light btn-sm"
+            (click)="ViewFile(sub.submissionId!)"
+          >
+            Download
+          </button>
+        </div>
       </div>
-
+    } @empty {
+      <div class="p-4 text-center text-muted-custom">No submissions found.</div>
     }
-
-    @empty {
-      <div class="alert alert-warning text-center">
-        No SubmitFiles found.
-      </div>
-    }
-
   </div>
+</div>
 
+@if (grades.length) {
+  <div class="surface-card p-4">
+    <h2 class="h5 mb-3">Grades summary</h2>
+    <div class="table-responsive">
+      <table class="table table-dark table-striped align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (g of grades; track g.studentName) {
+            <tr>
+              <td>{{ g.studentName }}</td>
+              <td>{{ g.grade != null ? g.grade : '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

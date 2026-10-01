@@ -6,34 +6,49 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-studentspage',
-  imports: [FormsModule,RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './studentspage.html',
   styleUrl: './studentspage.css',
 })
 export class Studentspage {
-  student!:Student;
-  studentList!:Student[];
-  searchText: string = '';
+  studentList: Student[] = [];
+  searchText = '';
+  errorMessage = '';
+  searched = false;
 
-  constructor(private studentservice:StudentService)
-  {
-    this.studentList = this.studentservice.getStudents();
-  }
+  constructor(private studentservice: StudentService) {}
 
   searchStudents(): void {
-    
-    this.studentList =
-      this.studentservice.searchStudents(this.searchText);
+    this.errorMessage = '';
+    this.searched = true;
+    const name = this.searchText.trim();
+    if (!name) {
+      this.studentList = [];
+      this.errorMessage = 'Enter a student name to search';
+      return;
+    }
 
+    this.studentservice.searchStudentByName(name).subscribe({
+      next: (res) => {
+        if (res.result) {
+          this.studentList = [res.result];
+        } else {
+          this.studentList = [];
+        }
+      },
+      error: (error) => {
+        this.studentList = [];
+        this.errorMessage =
+          error?.error?.message || 'Student not found';
+      },
+    });
   }
 
-onSearchInput(): void {
-  if (!this.searchText.trim()) {
-    this.studentList = this.studentservice.getStudents();
-  }
-}
-
-  viewStudent(studentId: number): void {
-    console.log('View Student:', studentId);
+  onSearchInput(): void {
+    if (!this.searchText.trim()) {
+      this.studentList = [];
+      this.searched = false;
+      this.errorMessage = '';
+    }
   }
 }

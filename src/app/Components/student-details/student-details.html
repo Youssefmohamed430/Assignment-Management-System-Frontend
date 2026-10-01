@@ -1,1 +1,21 @@
-<p>student-details works!</p>
+<div class="form-shell">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">Student Details</h1>
+    <a routerLink="/Students" class="btn btn-outline-light btn-sm">Back</a>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (student) {
+    <div class="surface-card p-4">
+      <h2 class="h4 mb-3">{{ student.name }}</h2>
+      <p class="mb-2"><span class="text-muted-custom">Username:</span> {{ student.userName }}</p>
+      <p class="mb-2"><span class="text-muted-custom">Email:</span> {{ student.email }}</p>
+      @if (student.imageName) {
+        <p class="mb-0"><span class="text-muted-custom">Image:</span> {{ student.imageName }}</p>
+      }
+    </div>
+  }
+</div>

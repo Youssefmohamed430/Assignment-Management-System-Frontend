@@ -1,7 +1,9 @@
 export class Submission {
-    id: number = 0;
-    AssignmentId: number = 0;
-    StudentId: number = 0;
-    filename:string = '';
-    SubmitDate:Date = new Date();
+  submissionId: number = 0;
+  assignmentId: number = 0;
+  assignmentTitle: string = '';
+  fileName: string = '';
+  stuname: string = '';
+  grade: number | null = null;
+  file?: File;
 }

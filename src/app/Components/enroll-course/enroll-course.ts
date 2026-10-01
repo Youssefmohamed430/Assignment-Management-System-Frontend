@@ -1,40 +1,71 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CourseService } from '../../Services/course-service';
 import { ICourse } from '../../models/ICourse';
 import { ResponseModel } from '../../models/response-model';
 import { CourseEnrollDto } from '../../models/course-enroll-dto';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-enroll-course',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './enroll-course.html',
   styleUrl: './enroll-course.css',
 })
-export class EnrollCourse {
-    CoursesList!: ICourse[] ;
-    courseEnrolled : CourseEnrollDto = new CourseEnrollDto;
-    constructor(private courseservice: CourseService) { 
-      this.getCourses();
-    }
-  
-    EnrollInCourse(id:number,crsName:string) {
-      this.courseEnrolled.crsId = id;
-      this.courseEnrolled.crsName = crsName;
-      this.courseservice.EnrollInCourse(this.courseEnrolled);
-    }
+export class EnrollCourse implements OnInit, OnDestroy {
+  CoursesList: ICourse[] = [];
+  courseEnrolled: CourseEnrollDto = new CourseEnrollDto();
+  imageUrls: Record<number, string> = {};
+  errorMessage = '';
+  successMessage = '';
 
-    public getCourses() {
-          this.courseservice.getCourses().subscribe({
-            next: (CourseRes: ResponseModel<ICourse[]>) => {
-    
-              this.CoursesList = CourseRes.result;
-    
-            },
-    
-            error: (error) => {
-              console.log("Courses Not Found");
-              console.error(error);
-            }
-          });
-     }
+  constructor(private courseservice: CourseService) {}
+
+  ngOnInit(): void {
+    this.getCourses();
+  }
+
+  ngOnDestroy(): void {
+    Object.values(this.imageUrls).forEach((url) => URL.revokeObjectURL(url));
+  }
+
+  EnrollInCourse(id: number, crsName: string) {
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.courseEnrolled.crsId = id;
+    this.courseEnrolled.crsName = crsName;
+    this.courseservice.EnrollInCourse(this.courseEnrolled).subscribe({
+      next: (response: ResponseModel<CourseEnrollDto>) => {
+        this.successMessage = response.message || `Enrolled in ${crsName}`;
+      },
+      error: (error) => {
+        this.errorMessage =
+          error?.error?.message || 'Enrollment failed';
+      },
+    });
+  }
+
+  public getCourses() {
+    this.courseservice.getCourses().subscribe({
+      next: (CourseRes: ResponseModel<ICourse[]>) => {
+        this.CoursesList = CourseRes.result ?? [];
+        this.CoursesList.forEach((c) => this.loadImage(c.id));
+      },
+      error: (error) => {
+        this.errorMessage =
+          error?.error?.message || 'Failed to load courses';
+      },
+    });
+  }
+
+  loadImage(courseId: number): void {
+    this.courseservice.getCourseImage(courseId).subscribe({
+      next: (blob) => {
+        if (this.imageUrls[courseId]) {
+          URL.revokeObjectURL(this.imageUrls[courseId]);
+        }
+        this.imageUrls[courseId] = URL.createObjectURL(blob);
+      },
+      error: () => {},
+    });
+  }
 }

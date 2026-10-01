@@ -1,29 +1,18 @@
-<div class="container py-5">
-  <div class="row align-items-center">
-
-    <!-- Text -->
-    <div class="col-md-6">
-      <h1 class="display-4 fw-bold mb-4">
-        Welcome to Our Website
-      </h1>
-
-      <p class="lead text-muted">
-        Discover a world of possibilities with our platform. Whether you're looking to learn, connect, or grow, we have something for everyone. Join us today and start your journey!
-      </p>
-
-      <button class="btn btn-primary btn-lg mt-3">
-        Get Started
-      </button>
+<section class="home-hero">
+  <div class="home-hero-overlay"></div>
+  <div class="container home-hero-content">
+    <p class="brand-mark">Assignment Manager</p>
+    <h1 class="hero-headline">Organize courses, deadlines, and submissions in one place.</h1>
+    <p class="hero-support">
+      A focused workspace for admins, instructors, and students.
+    </p>
+    <div class="hero-actions">
+      @if (authservice.getUserLogged()) {
+        <a routerLink="/Courses" class="btn btn-accent btn-lg">Go to Courses</a>
+      } @else {
+        <a routerLink="/Login" class="btn btn-accent btn-lg">Get Started</a>
+        <a routerLink="/Register" class="btn btn-outline-light btn-lg">Register</a>
+      }
     </div>
-
-    <!-- Image -->
-    <div class="col-md-6 text-center">
-      <img
-        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-        class="img-fluid rounded"
-        alt="Home Image"
-      />
-    </div>
-
   </div>
-</div>
+</section>

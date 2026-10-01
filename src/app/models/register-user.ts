@@ -1,6 +1,7 @@
 export class RegisterUser {
-    UserName:string='';
-    Name:string='';
-    Password='';
-    Email:string='';
+  userName = '';
+  name = '';
+  password = '';
+  email = '';
+  role = 'Instructor';
 }

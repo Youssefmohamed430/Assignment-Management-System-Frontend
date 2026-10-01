@@ -1,64 +1,82 @@
-<section class="vh-100">
-  <div class="container-fluid h-custom">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-md-9 col-lg-6 col-xl-5">
-        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-          class="img-fluid" alt="Sample image">
-      </div>
-      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <form #RegisterForm="ngForm" (submit)="RegisterUser()" >
-          <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-            <p class="lead fw-normal mb-0 me-3">Register </p>
-          </div>
+<section class="auth-page">
+  <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-75">
+      <div class="col-md-6 col-lg-5">
+        <div class="auth-card">
+          <h1 class="auth-title">Register</h1>
+          <p class="auth-subtitle">Create an instructor account</p>
 
-          <!-- UserName input -->
-          <div data-mdb-input-init class="form-outline mb-4">
-              <label class="form-label" for="form3Example3">Username</label>
-            <input type="text" id="form3Example3" class="form-control form-control-lg"
-              placeholder="Enter username" 
-              name="username"
-              [(ngModel)]="registeredUser.UserName"/>
-          </div>
-          
-          <!-- NAME input -->
-          <div data-mdb-input-init class="form-outline mb-4">
-              <label class="form-label" for="form3Example3">Name</label>
-            <input type="text" id="form3Example3" class="form-control form-control-lg"
-              placeholder="Enter your name" 
-              name="name"
-              [(ngModel)]="registeredUser.Name"/>
-          </div>
+          @if (errorMessage) {
+            <div class="alert alert-danger">{{ errorMessage }}</div>
+          }
 
-          <!-- Email input -->
-          <div data-mdb-input-init class="form-outline mb-4">
-              <label class="form-label" for="form3Example3">Email address</label>
-            <input type="email" id="form3Example3" class="form-control form-control-lg"
-              placeholder="Enter a valid email address" 
-              name="email"
-              [(ngModel)]="registeredUser.Email"/>
-          </div>
+          <form #RegisterForm="ngForm" (submit)="RegisterUser(); $event.preventDefault()">
+            <div class="mb-3">
+              <label class="form-label" for="regUsername">Username</label>
+              <input
+                type="text"
+                id="regUsername"
+                class="form-control form-control-lg"
+                name="username"
+                placeholder="Letters and numbers only"
+                [(ngModel)]="registeredUser.userName"
+                required
+              />
+            </div>
 
-          <!-- Password input -->
-          <div data-mdb-input-init class="form-outline mb-3">
-            <label class="form-label" for="form3Example4">Password</label>
-            <input type="password" id="form3Example4" class="form-control form-control-lg"
-              placeholder="Enter password" 
-              name="password"
-              [(ngModel)]="registeredUser.Password"/>
-          </div>
-          <div class="text-center text-lg-start mt-4 pt-2">
+            <div class="mb-3">
+              <label class="form-label" for="regName">Name</label>
+              <input
+                type="text"
+                id="regName"
+                class="form-control form-control-lg"
+                name="name"
+                placeholder="Letters only"
+                [(ngModel)]="registeredUser.name"
+                required
+              />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="regEmail">Email</label>
+              <input
+                type="email"
+                id="regEmail"
+                class="form-control form-control-lg"
+                name="email"
+                placeholder="Enter email"
+                [(ngModel)]="registeredUser.email"
+                required
+              />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="regPassword">Password</label>
+              <input
+                type="password"
+                id="regPassword"
+                class="form-control form-control-lg"
+                name="password"
+                placeholder="Min 8 chars, upper, lower, digit"
+                [(ngModel)]="registeredUser.password"
+                required
+              />
+            </div>
+
             <button
               type="submit"
-              class="btn btn-primary btn-lg"
-              [disabled]="RegisterForm.invalid">
-
-                Register
-
+              class="btn btn-accent btn-lg w-100"
+              [disabled]="RegisterForm.invalid"
+            >
+              Register
             </button>
-            <p class="small fw-bold mt-2 pt-1 mb-0">Do you have an account? <a routerLink = "/Login"
-                class="link-danger">Login</a></p>
-          </div>
-        </form>
+
+            <p class="auth-footer-text mt-3 mb-0">
+              Already have an account?
+              <a routerLink="/Login">Login</a>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   </div>

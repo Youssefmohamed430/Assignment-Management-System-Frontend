@@ -1,65 +1,56 @@
-<div class="container py-4">
-
-  <!-- Search -->
-  <form
-    class="d-flex mb-4"
-    (submit)="searchStudents()">
-
-    <input
-      class="form-control me-2"
-      type="search"
-      name="searchText"
-      [(ngModel)]="searchText"
-      (input)="onSearchInput()"
-      placeholder="Search for a student..."
-      aria-label="Search">
-
-    <button
-      class="btn btn-outline-success"
-      type="submit">
-      Search
-    </button>
-
-  </form>
-
-
-  <!-- Students -->
-  <div class="list-group">
-
-    @for (student of studentList; track student.id) {
-
-      <div
-        class="list-group-item d-flex justify-content-between align-items-center p-3">
-
-        <!-- Student Information -->
-        <div>
-          <h5 class="mb-1">
-            {{ student.name }}
-          </h5>
-
-          <small class="text-muted">
-            {{ student.email }}
-          </small>
-        </div>
-
-        <!-- View Button -->
-        <button
-          type="button"
-          class="btn btn-primary"
-          routerLink = "/ViewStudent/{{student.id}}">
-          View
-        </button>
-
-      </div>
-
-    }
-
-    @empty {
-      <div class="alert alert-warning text-center">
-        No students found.
-      </div>
-    }
-
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+  <div>
+    <h1 class="page-title mb-1">Students</h1>
+    <p class="page-subtitle mb-0">Search students by display name</p>
   </div>
+  <a routerLink="/Students/Register" class="btn btn-accent">Register Student</a>
+</div>
 
+<form class="d-flex mb-4 gap-2" (submit)="searchStudents(); $event.preventDefault()">
+  <input
+    class="form-control"
+    type="search"
+    name="searchText"
+    [(ngModel)]="searchText"
+    (input)="onSearchInput()"
+    placeholder="Search for a student..."
+    aria-label="Search"
+  />
+  <button class="btn btn-outline-light" type="submit">Search</button>
+</form>
+
+@if (errorMessage) {
+  <div class="alert alert-danger">{{ errorMessage }}</div>
+}
+
+<div class="surface-card">
+  <div class="list-group list-group-flush bg-transparent">
+    @for (student of studentList; track student.userName || student.name) {
+      <div
+        class="list-group-item bg-transparent text-light border-secondary d-flex justify-content-between align-items-center p-3"
+      >
+        <div>
+          <h5 class="mb-1">{{ student.name }}</h5>
+          <small class="text-muted-custom">{{ student.email }}</small>
+          @if (student.userName) {
+            <div class="small text-muted-custom">@{{ student.userName }}</div>
+          }
+        </div>
+        <a
+          class="btn btn-outline-light btn-sm"
+          [routerLink]="['/ViewStudent', student.name]"
+        >
+          View
+        </a>
+      </div>
+    } @empty {
+      @if (searched && !errorMessage) {
+        <div class="p-4 text-center text-muted-custom">No students found.</div>
+      } @else if (!searched) {
+        <div class="p-4 text-center text-muted-custom">
+          Enter a name and search to find a student.
+        </div>
+      }
+    }
+  </div>
 </div>

@@ -1,31 +1,61 @@
-<form #AddCourseForm="ngForm" (submit)="AddCourse()" >
-  <fieldset >
-    <legend>Add Course</legend>
+<div class="form-shell">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">Add Course</h1>
+    <a routerLink="/Courses" class="btn btn-outline-light btn-sm">Back</a>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+  @if (successMessage) {
+    <div class="alert alert-success">{{ successMessage }}</div>
+  }
+
+  <form #AddCourseForm="ngForm" (submit)="AddCourse(); $event.preventDefault()" class="surface-card p-4">
     <div class="mb-3">
       <label for="courseName" class="form-label">Course Name</label>
-      <input type="text" id="courseName" 
-      class="form-control" placeholder="Course name"
-      name="CrsName"
-      [(ngModel)] = "Course.crsName">
+      <input
+        type="text"
+        id="courseName"
+        class="form-control"
+        placeholder="Course name"
+        name="CrsName"
+        [(ngModel)]="Course.crsName"
+        required
+      />
     </div>
+
     <div class="mb-3">
-      <label for="courseImage" class="form-label">Course Image</label>
+      <label for="courseImage" class="form-label">Course Image (jpg/png/webp, max 5 MB)</label>
       <input
         type="file"
         id="courseImage"
         class="form-control"
         name="Image"
+        accept=".jpg,.jpeg,.png,.webp"
         (change)="onFileSelected($event)"
-      >
+        required
+      />
     </div>
-    <div class="mb-3">
-      <label for="courseCategory" class="form-label">Instructor</label>
-      <select id="courseCategory" class="form-select" name="Instructor" [(ngModel)]="Course.instId">
+
+    <div class="mb-4">
+      <label for="courseInstructor" class="form-label">Instructor</label>
+      <select
+        id="courseInstructor"
+        class="form-select"
+        name="Instructor"
+        [(ngModel)]="Course.instId"
+        required
+      >
+        <option value="" disabled>Select instructor</option>
         @for (inst of InstructorList; track inst.id) {
-          <option value="{{ inst.id }}">{{ inst.name }}</option>
+          <option [value]="inst.id">{{ inst.name }}</option>
         }
       </select>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </fieldset>
-</form>
+
+    <button type="submit" class="btn btn-accent" [disabled]="AddCourseForm.invalid">
+      Create Course
+    </button>
+  </form>
+</div>

@@ -1,5 +1,7 @@
 export class Student {
-    id: number= 0;
-    name: string= '';
-    email: string= '';
+  id: string = '';
+  userName: string = '';
+  name: string = '';
+  email: string = '';
+  imageName?: string = '';
 }

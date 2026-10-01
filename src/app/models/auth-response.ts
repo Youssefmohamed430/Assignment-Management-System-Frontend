@@ -1,5 +1,6 @@
 export class AuthResponse {
   id: string = '';
+  iD?: string = '';
   message: string | null = null;
   isAuthenticated: boolean = false;
   username: string = '';

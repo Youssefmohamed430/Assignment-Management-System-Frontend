@@ -1,14 +1,50 @@
-<form>
-  <fieldset >
-    <legend>Edit Assignment</legend>
+<div class="form-shell">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">Edit Assignment</h1>
+    <a
+      [routerLink]="['/Courses/AssignmentDetails', courseId]"
+      class="btn btn-outline-light btn-sm"
+    >
+      Back
+    </a>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  <form #EditForm="ngForm" (submit)="EditAssignment(); $event.preventDefault()" class="surface-card p-4">
     <div class="mb-3">
       <label for="assignmentName" class="form-label">Assignment Title</label>
-      <input type="text" id="assignmentName" class="form-control" placeholder="Assignment title" value="{{ assignment?.title }}">
+      <input
+        type="text"
+        id="assignmentName"
+        class="form-control"
+        placeholder="Assignment title"
+        name="title"
+        [(ngModel)]="assignment.title"
+        required
+      />
     </div>
-    <div class="mb-3">
-      <label for="assignmentDescription" class="form-label">Assignment Deadline</label>
-      <input type="date" id="assignmentDescription" class="form-control" placeholder="Assignment date" value="{{ assignment?.deadline | date:'yyyy-MM-dd' }}">
+
+    <div class="mb-4">
+      <label for="assignmentDeadline" class="form-label">Deadline</label>
+      <input
+        type="date"
+        id="assignmentDeadline"
+        class="form-control"
+        name="deadline"
+        [(ngModel)]="assignment.deadLine"
+        required
+      />
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </fieldset>
-</form>
+
+    <p class="text-muted-custom small mb-4">
+      Note: assignment file cannot be replaced after creation.
+    </p>
+
+    <button type="submit" class="btn btn-accent" [disabled]="EditForm.invalid">
+      Save Changes
+    </button>
+  </form>
+</div>
