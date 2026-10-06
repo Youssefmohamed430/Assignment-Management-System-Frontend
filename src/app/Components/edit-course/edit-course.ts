@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ICourse } from '../../models/ICourse';
 import { CourseService } from '../../Services/course-service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -24,7 +24,8 @@ export class EditCourse implements OnInit {
     private courseservice: CourseService,
     private _activatedRoute: ActivatedRoute,
     private instructorservice: InstructorService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -33,10 +34,12 @@ export class EditCourse implements OnInit {
     this.instructorservice.getInstructors().subscribe({
       next: (InstructorRes: ResponseModel<Instructor[]>) => {
         this.InstructorList = InstructorRes.result ?? [];
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.errorMessage =
           error?.error?.message || 'Failed to load instructors';
+        this.cdr.markForCheck();
       },
     });
   }
@@ -45,10 +48,12 @@ export class EditCourse implements OnInit {
     this.courseservice.getCourseById(this.CourseId).subscribe({
       next: (response: ResponseModel<ICourse>) => {
         this.course = response.result;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.errorMessage =
           error?.error?.message || 'Failed to load course';
+        this.cdr.markForCheck();
       },
     });
   }
@@ -58,11 +63,13 @@ export class EditCourse implements OnInit {
     this.courseservice.EditCourse(this.course, this.CourseId).subscribe({
       next: () => {
         this.successMessage = 'Course updated';
+        this.cdr.markForCheck();
         this.router.navigateByUrl('/Courses');
       },
       error: (error) => {
         this.errorMessage =
           error?.error?.message || 'Failed to update course';
+        this.cdr.markForCheck();
       },
     });
   }

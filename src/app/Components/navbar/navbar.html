@@ -29,11 +29,6 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/Students" routerLinkActive="active">Students</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/Students/Register" routerLinkActive="active">
-                Register Student
-              </a>
-            </li>
           }
 
           @if (authservice.isInstructor() || authservice.isStudent()) {
@@ -55,7 +50,7 @@
               >
                 Notifications
                 @if (notifications.length) {
-                  <span class="badge bg-secondary ms-1">{{ notifications.length }}</span>
+                  <span class="badge notif-badge ms-1">{{ notifications.length }}</span>
                 }
               </button>
 

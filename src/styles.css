@@ -24,7 +24,27 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 app-root {
@@ -67,9 +87,16 @@ a:hover {
 }
 
 .page-title {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-  font-weight: 600;
+  font-family: 'Inter', Georgia, serif;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.page-header {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem !important;
 }
 
 .page-subtitle,
@@ -226,12 +253,15 @@ a:hover {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 2rem;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .auth-title {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 2rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   margin-bottom: 0.35rem;
 }
 
@@ -257,4 +287,41 @@ a:hover {
 
 .list-group-item:hover {
   background: #1a1a1a !important;
+}
+
+/* Page main shell responsive padding */
+.main-shell {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .main-shell {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Notification item hover */
+.notification-item {
+  transition: background-color 0.15s ease;
+}
+
+.notification-item:hover {
+  background: var(--surface-2);
+}
+
+/* Badge override */
+.badge.text-bg-secondary {
+  background-color: var(--surface-2) !important;
+  color: var(--muted) !important;
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+
+/* Spinner */
+.spinner-sm {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-width: 2px;
 }

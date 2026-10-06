@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { RegisterUser } from '../../models/register-user';
@@ -18,7 +18,8 @@ export class RegisterStudent {
 
   constructor(
     private authservice: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.registeredUser.role = 'Student';
   }
@@ -36,10 +37,12 @@ export class RegisterStudent {
         } else {
           this.errorMessage = response.message || 'Registration failed';
         }
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.errorMessage =
           error?.error?.message || error?.error?.Message || 'Registration failed';
+        this.cdr.markForCheck();
       },
     });
   }

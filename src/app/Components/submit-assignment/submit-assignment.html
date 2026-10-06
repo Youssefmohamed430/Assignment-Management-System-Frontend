@@ -18,12 +18,11 @@
 
   <form (submit)="submit(); $event.preventDefault()" class="surface-card p-4">
     <div class="mb-3">
-      <label class="form-label">Assignment</label>
+      <label class="form-label">Assignment (You Must  Write your Name at SubmitName)</label>
       <input
         type="text"
         class="form-control"
         [value]="assignmentTitle"
-        disabled
       />
     </div>
 

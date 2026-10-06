@@ -10,8 +10,28 @@
 
   @if (student) {
     <div class="surface-card p-4">
-      <h2 class="h4 mb-3">{{ student.name }}</h2>
-      <p class="mb-2"><span class="text-muted-custom">Username:</span> {{ student.userName }}</p>
+      <div class="d-flex align-items-center gap-4 mb-4">
+        @if (imageUrl) {
+          <img
+            [src]="imageUrl"
+            alt="Student image"
+            class="rounded-circle"
+            width="96"
+            height="96"
+            style="object-fit: cover;"
+          />
+        } @else {
+          <div
+            class="rounded-circle d-flex align-items-center justify-content-center text-muted-custom"
+            style="width: 96px; height: 96px; background: rgba(255,255,255,0.06);"
+          >
+            No image
+          </div>
+        }
+        <h2 class="h4 mb-0">{{ student.name || student.displayName || student.userName }}</h2>
+      </div>
+
+      <p class="mb-2"><span class="text-muted-custom">Username:</span> {{ student.userName || student.username }}</p>
       <p class="mb-2"><span class="text-muted-custom">Email:</span> {{ student.email }}</p>
       @if (student.imageName) {
         <p class="mb-0"><span class="text-muted-custom">Image:</span> {{ student.imageName }}</p>

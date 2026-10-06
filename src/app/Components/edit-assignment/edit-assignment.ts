@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IAssigment } from '../../models/iassigment';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AssignmentService } from '../../Services/assignment-service';
@@ -21,7 +21,8 @@ export class EditAssignment implements OnInit {
   constructor(
     private assignmentService: AssignmentService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -32,18 +33,27 @@ export class EditAssignment implements OnInit {
 
   getassignment() {
     this.assignmentService.getAssignmentById(this.assignmentId).subscribe({
-      next: (response: ResponseModel<IAssigment>) => {
-        this.assignment = response.result;
+      next: (response: any) => {
+        const data = response?.result ?? response?.data ?? response;
+        this.assignment = {
+          ...data,
+          assignmentId: data?.assignmentId ?? data?.id ?? this.assignmentId,
+          crsId: data?.crsId ?? data?.courseId ?? this.courseId,
+          title: data?.title ?? '',
+          deadLine: data?.deadLine || data?.deadline || '',
+        };
         if (this.assignment.deadLine) {
           this.assignment.deadLine = String(this.assignment.deadLine).substring(
             0,
             10
           );
         }
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.errorMessage =
           error?.error?.message || 'Assignment not found';
+        this.cdr.markForCheck();
       },
     });
   }
@@ -59,6 +69,7 @@ export class EditAssignment implements OnInit {
       error: (error) => {
         this.errorMessage =
           error?.error?.message || 'Update failed';
+        this.cdr.markForCheck();
       },
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SubmisiionService } from '../../Services/submisiion-service';
@@ -23,7 +23,8 @@ export class SubmitAssignment implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private submissionService: SubmisiionService,
-    private assignmentService: AssignmentService
+    private assignmentService: AssignmentService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +33,7 @@ export class SubmitAssignment implements OnInit {
     this.assignmentService.getAssignmentById(this.assignmentId).subscribe({
       next: (res) => {
         this.assignmentTitle = res.result?.title ?? '';
+        this.cdr.markForCheck();
       },
     });
   }
@@ -55,6 +57,7 @@ export class SubmitAssignment implements OnInit {
       .subscribe({
         next: (res) => {
           this.successMessage = res.message || 'Submitted successfully';
+          this.cdr.markForCheck();
           setTimeout(() => {
             this.router.navigate(['/Courses/AssignmentDetails', this.courseId]);
           }, 800);
@@ -62,6 +65,7 @@ export class SubmitAssignment implements OnInit {
         error: (error) => {
           this.errorMessage =
             error?.error?.message || 'Submission failed';
+          this.cdr.markForCheck();
         },
       });
   }

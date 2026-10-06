@@ -1,0 +1,14 @@
+.grade-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.submission-row {
+  border-radius: 10px;
+  margin-bottom: 0.25rem;
+}
+
+.submission-row:last-child {
+  border-bottom: none !important;
+}

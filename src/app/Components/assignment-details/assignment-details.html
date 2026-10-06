@@ -28,7 +28,7 @@
         <div class="surface-card-body d-flex flex-column">
           <h5 class="card-title">{{ assignment.title }}</h5>
           <h6 class="text-muted-custom mb-3">
-            Deadline: {{ assignment.deadLine | date }}
+            Deadline: {{ assignment.deadLine }}
           </h6>
 
           @if (authservice.isStudent() && submitDetails[assignment.assignmentId]) {

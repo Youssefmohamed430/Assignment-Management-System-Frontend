@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { IAssigment } from '../../models/iassigment';
 import { FormsModule } from '@angular/forms';
 import { AssignmentService } from '../../Services/assignment-service';
@@ -19,7 +19,8 @@ export class AddAssignment {
   constructor(
     private assignmentservice: AssignmentService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.courseId = Number(this.route.snapshot.params['id']);
   }
@@ -38,6 +39,7 @@ export class AddAssignment {
       error: (error) => {
         this.errorMessage =
           error?.error?.message || 'Failed to add assignment';
+        this.cdr.markForCheck();
       },
     });
   }

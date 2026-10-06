@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../Services/auth-service';
 import { StudentService } from '../../Services/student-service';
 import { InstructorService } from '../../Services/instructor-service';
@@ -22,7 +22,8 @@ export class Profile implements OnInit, OnDestroy {
   constructor(
     public authservice: AuthService,
     private studentService: StudentService,
-    private instructorService: InstructorService
+    private instructorService: InstructorService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +56,7 @@ export class Profile implements OnInit, OnDestroy {
           URL.revokeObjectURL(this.imageUrl);
         }
         this.imageUrl = URL.createObjectURL(blob);
+        this.cdr.markForCheck();
       },
       error: () => {
         /* no image yet */
@@ -75,22 +77,26 @@ export class Profile implements OnInit, OnDestroy {
       this.studentService.uploadProfileImage(file).subscribe({
         next: (res) => {
           this.successMessage = res.message || 'Profile image updated';
+          this.cdr.markForCheck();
           this.loadProfileImage();
         },
         error: (error) => {
           this.errorMessage =
             error?.error?.message || 'Failed to upload image';
+          this.cdr.markForCheck();
         },
       });
     } else {
       this.instructorService.uploadProfileImage(file).subscribe({
         next: (res) => {
           this.successMessage = res.message || 'Profile image updated';
+          this.cdr.markForCheck();
           this.loadProfileImage();
         },
         error: (error) => {
           this.errorMessage =
             error?.error?.message || 'Failed to upload image';
+          this.cdr.markForCheck();
         },
       });
     }

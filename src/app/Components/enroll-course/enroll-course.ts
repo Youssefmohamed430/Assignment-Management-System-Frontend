@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CourseService } from '../../Services/course-service';
 import { ICourse } from '../../models/ICourse';
 import { ResponseModel } from '../../models/response-model';
@@ -18,7 +18,10 @@ export class EnrollCourse implements OnInit, OnDestroy {
   errorMessage = '';
   successMessage = '';
 
-  constructor(private courseservice: CourseService) {}
+  constructor(
+    private courseservice: CourseService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.getCourses();
@@ -36,10 +39,12 @@ export class EnrollCourse implements OnInit, OnDestroy {
     this.courseservice.EnrollInCourse(this.courseEnrolled).subscribe({
       next: (response: ResponseModel<CourseEnrollDto>) => {
         this.successMessage = response.message || `Enrolled in ${crsName}`;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.errorMessage =
           error?.error?.message || 'Enrollment failed';
+        this.cdr.markForCheck();
       },
     });
   }
@@ -49,10 +54,12 @@ export class EnrollCourse implements OnInit, OnDestroy {
       next: (CourseRes: ResponseModel<ICourse[]>) => {
         this.CoursesList = CourseRes.result ?? [];
         this.CoursesList.forEach((c) => this.loadImage(c.id));
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.errorMessage =
           error?.error?.message || 'Failed to load courses';
+        this.cdr.markForCheck();
       },
     });
   }
@@ -64,6 +71,7 @@ export class EnrollCourse implements OnInit, OnDestroy {
           URL.revokeObjectURL(this.imageUrls[courseId]);
         }
         this.imageUrls[courseId] = URL.createObjectURL(blob);
+        this.cdr.markForCheck();
       },
       error: () => {},
     });

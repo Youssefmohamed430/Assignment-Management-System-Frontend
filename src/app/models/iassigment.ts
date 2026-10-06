@@ -2,6 +2,7 @@ export class IAssigment {
   assignmentId: number = 0;
   title: string = '';
   deadLine: string = '';
+  deadline?: string = '';
   crsId: number = 0;
   crsName?: string = '';
   fileName?: string = '';

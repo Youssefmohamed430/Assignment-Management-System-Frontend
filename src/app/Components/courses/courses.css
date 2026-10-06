@@ -1,0 +1,6 @@
+/* Responsive course grid min-height for images */
+@media (max-width: 576px) {
+  .course-image-wrap {
+    height: 140px;
+  }
+}

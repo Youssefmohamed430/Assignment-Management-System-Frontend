@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NotificationItem } from '../../models/notification';
 import { NotificationService } from '../../Services/notification-service';
@@ -21,7 +21,8 @@ export class Navbar implements OnInit, OnDestroy {
   constructor(
     private notificationService: NotificationService,
     public authservice: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +33,7 @@ export class Navbar implements OnInit, OnDestroy {
       } else {
         this.notifications = [];
       }
+      this.cdr.markForCheck();
     });
   }
 
@@ -43,9 +45,11 @@ export class Navbar implements OnInit, OnDestroy {
     this.notificationService.getNotifications().subscribe({
       next: (res) => {
         this.notifications = res.result ?? [];
+        this.cdr.markForCheck();
       },
       error: () => {
         this.notifications = [];
+        this.cdr.markForCheck();
       },
     });
   }
@@ -63,6 +67,7 @@ export class Navbar implements OnInit, OnDestroy {
         this.notifications = this.notifications.filter(
           (n) => n.id !== notificationId
         );
+        this.cdr.markForCheck();
       },
     });
   }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { RegisterUser } from '../../models/register-user';
 import { AuthService } from '../../Services/auth-service';
@@ -17,7 +17,8 @@ export class Register {
 
   constructor(
     private authservice: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   RegisterUser() {
@@ -29,11 +30,13 @@ export class Register {
           this.router.navigateByUrl('/Courses');
         } else {
           this.errorMessage = response.message || 'Registration failed';
+          this.cdr.markForCheck();
         }
       },
       error: (error) => {
         this.errorMessage =
           error?.error?.message || error?.error?.Message || 'Registration failed';
+        this.cdr.markForCheck();
       },
     });
   }

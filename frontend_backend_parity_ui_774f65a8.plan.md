@@ -10,16 +10,16 @@ todos:
     status: completed
   - id: phase2-fix-pages
     content: Fix add/edit course, edit/delete assignment, submit assignment, courses list refresh, images
-    status: in_progress
+    status: completed
   - id: phase3-features
     content: Complete submissions+grading, register student, student search, notifications, profile images, routes
-    status: pending
+    status: completed
   - id: phase4-dark-ui
     content: Apply black/gray dark theme globally and polish all pages (navbar, home, forms, tables)
-    status: pending
+    status: completed
   - id: phase5-verify
     content: Cleanup dead code; smoke-test Admin/Instructor/Student flows against API
-    status: pending
+    status: completed
 isProject: false
 ---
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { InstructorService } from '../../Services/instructor-service';
 import { CourseService } from '../../Services/course-service';
 import { Instructor } from '../../models/instructor';
@@ -22,7 +22,8 @@ export class AddCourse implements OnInit {
   constructor(
     private instructorService: InstructorService,
     private courseservice: CourseService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -40,10 +41,12 @@ export class AddCourse implements OnInit {
     this.instructorService.getInstructors().subscribe({
       next: (InstructorRes: ResponseModel<Instructor[]>) => {
         this.InstructorList = InstructorRes.result ?? [];
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.errorMessage =
           error?.error?.message || 'Failed to load instructors';
+        this.cdr.markForCheck();
       },
     });
   }
@@ -58,11 +61,13 @@ export class AddCourse implements OnInit {
     this.courseservice.addCourse(this.Course).subscribe({
       next: () => {
         this.successMessage = 'Course created';
+        this.cdr.markForCheck();
         this.router.navigateByUrl('/Courses');
       },
       error: (error) => {
         this.errorMessage =
           error?.error?.message || 'Failed to add course';
+        this.cdr.markForCheck();
       },
     });
   }

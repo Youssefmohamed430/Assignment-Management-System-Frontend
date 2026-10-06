@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ICourse } from '../../models/ICourse';
 import { RouterLink } from '@angular/router';
 import { CourseService } from '../../Services/course-service';
@@ -24,7 +24,8 @@ export class Courses implements OnInit, OnDestroy {
     private courseservice: CourseService,
     public authservice: AuthService,
     public instructorservice: InstructorService,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -48,25 +49,34 @@ export class Courses implements OnInit, OnDestroy {
   }
 
   public getCourses(CourseListObservable: Observable<ResponseModel<ICourse[]>>) {
-    CourseListObservable.subscribe({
-      next: (CourseRes: ResponseModel<ICourse[]>) => {
-        this.CoursesList = CourseRes.result ?? [];
-        this.CoursesList.forEach((c) => this.loadImage(c.id));
-      },
-      error: (error) => {
-        this.errorMessage =
-          error?.error?.message || 'Failed to load courses';
-      },
-    });
-  }
+      CourseListObservable.subscribe({
+        next: (CourseRes: ResponseModel<ICourse[]>) => {
+          this.CoursesList = (CourseRes.result ?? []).map((c: any) => ({
+            ...c,
+            id: c.id ?? c.crsId ?? c.courseId,
+            crsName: c.crsName ?? c.courseName ?? '',
+            instName: c.instName ?? c.instructorName ?? '',
+          }));
+          this.CoursesList.forEach((c) => this.loadImage(c.id));
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          this.errorMessage =
+            error?.error?.message || 'Failed to load courses';
+          this.cdr.markForCheck();
+        },
+      });
+    }
 
   loadImage(courseId: number): void {
+    console.log(`Loading image for course ID: ${courseId}`);
     this.courseservice.getCourseImage(courseId).subscribe({
       next: (blob) => {
         if (this.imageUrls[courseId]) {
           URL.revokeObjectURL(this.imageUrls[courseId]);
         }
         this.imageUrls[courseId] = URL.createObjectURL(blob);
+        this.cdr.markForCheck();
       },
       error: () => {
         /* keep placeholder */
@@ -81,10 +91,12 @@ export class Courses implements OnInit, OnDestroy {
       next: () => {
         this.successMessage = 'Course deleted';
         this.loadCourses();
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.errorMessage =
           error?.error?.message || 'Failed to delete course';
+        this.cdr.markForCheck();
       },
     });
   }
