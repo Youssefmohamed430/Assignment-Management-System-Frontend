@@ -3,7 +3,6 @@
     <h1 class="page-title mb-1">Students</h1>
     <p class="page-subtitle mb-0">Search students by display name</p>
   </div>
-  <a routerLink="/Students/Register" class="btn btn-accent">Register Student</a>
 </div>
 
 <form class="d-flex mb-4 gap-2" (submit)="searchStudents(); $event.preventDefault()">
@@ -41,6 +40,7 @@
         <a
           class="btn btn-outline-light btn-sm"
           [routerLink]="['/ViewStudent', student.name || student.displayName || student.userName]"
+          [state]="{ student: student }"
         >
           View
         </a>

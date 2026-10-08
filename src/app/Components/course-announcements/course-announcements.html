@@ -1,0 +1,60 @@
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+  <div>
+    <h1 class="page-title mb-1">Course Announcements</h1>
+    <p class="page-subtitle mb-0">Updates shared with everyone in this course.</p>
+  </div>
+  <a routerLink="/Courses" class="btn btn-outline-light btn-sm">Back to Courses</a>
+</div>
+
+@if (auth.isInstructor()) {
+  <section class="surface-card p-4 mb-4">
+    <h2 class="h5 mb-3">Post an announcement</h2>
+    <form (submit)="postAnnouncement(); $event.preventDefault()">
+      <label for="announcementMessage" class="form-label">Message</label>
+      <textarea
+        id="announcementMessage"
+        class="form-control mb-2"
+        rows="4"
+        maxlength="2000"
+        [(ngModel)]="message"
+        name="announcementMessage"
+        placeholder="For example: Tomorrow's lecture has been moved to 10 AM."
+        required
+      ></textarea>
+      <div class="d-flex justify-content-between align-items-center">
+        <small class="text-muted-custom">{{ message.length }}/2000</small>
+        <button
+          type="submit"
+          class="btn btn-accent"
+          [disabled]="!message.trim() || isPosting"
+        >
+          {{ isPosting ? 'Posting…' : 'Post Announcement' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}
+
+@if (errorMessage) { <div class="alert alert-danger">{{ errorMessage }}</div> }
+@if (successMessage) { <div class="alert alert-success">{{ successMessage }}</div> }
+
+<section class="surface-card p-4">
+  <h2 class="h5 mb-3">{{ auth.isInstructor() ? 'Posted announcements' : 'Announcements' }}</h2>
+  @if (isLoading) {
+    <p class="text-muted-custom mb-0">Loading announcements…</p>
+  } @else {
+    <div class="announcement-list">
+      @for (announcement of announcements; track announcement.id) {
+        <article class="announcement-item py-3 border-top border-secondary">
+          <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+            <span class="badge text-bg-info">Announcement</span>
+            <time class="small text-muted-custom">{{ announcement.createdAt | date:'medium' }}</time>
+          </div>
+          <p class="mb-0 announcement-message">{{ announcement.message }}</p>
+        </article>
+      } @empty {
+        <p class="text-muted-custom mb-0">No announcements for this course yet.</p>
+      }
+    </div>
+  }
+</section>

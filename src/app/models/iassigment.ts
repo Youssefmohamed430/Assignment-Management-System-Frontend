@@ -1,3 +1,5 @@
+import { AssignmentStatus } from './enums';
+
 export class IAssigment {
   assignmentId: number = 0;
   title: string = '';
@@ -7,4 +9,7 @@ export class IAssigment {
   crsName?: string = '';
   fileName?: string = '';
   assignmentFile?: File;
+  status?: AssignmentStatus;
+  publishedAt?: string | null;
+  closedAt?: string | null;
 }

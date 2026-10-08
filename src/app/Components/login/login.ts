@@ -14,6 +14,11 @@ import { AuthResponse } from '../../models/auth-response';
 export class Login {
   public User: LoginUser = new LoginUser();
   errorMessage = '';
+  readonly demoAccounts = [
+    { label: 'Admin', username: 'Admin1', password: 'Admin123' },
+    { label: 'Instructor', username: 'Instructor1', password: 'Instructor123' },
+    { label: 'Student', username: 'Student1', password: 'Student123' },
+  ];
 
   constructor(
     private authservice: AuthService,
@@ -21,13 +26,23 @@ export class Login {
     private cdr: ChangeDetectorRef
   ) {}
 
+  public fillDemoAccount(account: (typeof this.demoAccounts)[number]): void {
+    this.User.username = account.username;
+    this.User.password = account.password;
+    this.errorMessage = '';
+  }
+
   public Login() {
     this.errorMessage = '';
     this.authservice.LoginUser(this.User).subscribe({
       next: (response: AuthResponse) => {
         if (response.isAuthenticated) {
           this.authservice.setSession(response);
-          this.router.navigateByUrl('/Courses');
+          this.router.navigateByUrl(
+            this.authservice.isInstructor() || this.authservice.isStudent()
+              ? '/Dashboard'
+              : '/Courses'
+          );
         } else {
           this.errorMessage = response.message || 'Login failed';
           this.cdr.markForCheck();

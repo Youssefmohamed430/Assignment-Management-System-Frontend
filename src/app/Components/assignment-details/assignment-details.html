@@ -21,12 +21,32 @@
   <div class="alert alert-success">{{ successMessage }}</div>
 }
 
+@if (authservice.isInstructor()) {
+  <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
+    <label for="assignmentFilter" class="form-label mb-0">Show</label>
+    <select
+      id="assignmentFilter"
+      class="form-select form-select-sm"
+      style="width: auto; min-width: 190px;"
+      [value]="assignmentFilter"
+      (change)="setAssignmentFilter($any($event.target).value)"
+    >
+      <option value="active">Published &amp; Closed</option>
+      <option value="draft">Draft only</option>
+      <option value="archived">Archived only</option>
+    </select>
+  </div>
+}
+
 <div class="row g-4">
-  @for (assignment of AssignmentList; track assignment.assignmentId) {
+  @for (assignment of visibleAssignments; track assignment.assignmentId) {
     <div class="col-lg-4 col-md-6 col-12">
       <div class="surface-card h-100 fade-in">
         <div class="surface-card-body d-flex flex-column">
           <h5 class="card-title">{{ assignment.title }}</h5>
+          <app-status-badge [status]="assignment.status ?? 1" kind="assignment" />
+          @if (assignment.publishedAt) { <div class="small text-muted-custom mt-2">Published {{ assignment.publishedAt | date:'short' }}</div> }
+          @if (assignment.closedAt) { <div class="small text-muted-custom mt-1">Closed {{ assignment.closedAt | date:'short' }}</div> }
           <h6 class="text-muted-custom mb-3">
             Deadline: {{ assignment.deadLine }}
           </h6>
@@ -42,6 +62,12 @@
                     : 'Pending'
                 }}
               </div>
+              @if (submitDetails[assignment.assignmentId].feedback) {
+                <div class="mt-1">Instructor feedback: {{ submitDetails[assignment.assignmentId].feedback }}</div>
+              }
+              @if (submitDetails[assignment.assignmentId].attemptNumber) {
+                <div class="text-muted-custom">Attempt {{ submitDetails[assignment.assignmentId].attemptNumber }}</div>
+              }
             </div>
           }
 
@@ -55,6 +81,9 @@
             </button>
 
             @if (authservice.isInstructor()) {
+              @if (assignment.status === 0) { <button class="btn btn-success btn-sm" (click)="changeStatus(assignment.assignmentId, 'publish')">Publish</button> }
+              @if (assignment.status === 1) { <button class="btn btn-warning btn-sm" (click)="changeStatus(assignment.assignmentId, 'close')">Close</button> }
+              @if (assignment.status !== 3) { <button class="btn btn-outline-light btn-sm" (click)="changeStatus(assignment.assignmentId, 'archive')">Archive</button> }
               <a
                 class="btn btn-outline-light btn-sm"
                 [routerLink]="[
@@ -81,7 +110,7 @@
               </button>
             }
 
-            @if (authservice.isStudent()) {
+            @if (authservice.isStudent() && (assignment.status === 1 || assignment.status === undefined)) {
               <a
                 class="btn btn-accent btn-sm"
                 [routerLink]="[
@@ -100,7 +129,15 @@
     </div>
   } @empty {
     <div class="col-12">
-      <div class="empty-state">No assignments found.</div>
+      <div class="empty-state">
+        @if (authservice.isInstructor() && assignmentFilter === 'draft') {
+          No draft assignments found.
+        } @else if (authservice.isInstructor() && assignmentFilter === 'archived') {
+          No archived assignments found.
+        } @else {
+          No assignments found.
+        }
+      </div>
     </div>
   }
 </div>

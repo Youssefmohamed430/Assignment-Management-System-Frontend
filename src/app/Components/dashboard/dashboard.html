@@ -1,0 +1,46 @@
+<div class="page-header mb-4"><h1 class="page-title mb-1">Dashboard</h1><p class="page-subtitle mb-0">A summary of your courses and assignment activity.</p></div>
+@if (errorMessage) { <div class="alert alert-danger">{{ errorMessage }}</div> }
+@if (auth.isInstructor() && instructorData; as d) {
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-4" *ngFor="let metric of [
+      {label: 'My courses', value: d.myCourses}, {label: 'Students', value: d.totalStudents},
+      {label: 'Pending submissions', value: d.pendingSubmissions}, {label: 'Assignments', value: d.totalAssignments},
+      {label: 'Average grade', value: d.averageCourseGrade}, {label: 'Late submissions', value: d.lateSubmissions}
+    ]"><div class="surface-card p-3 metric"><div class="text-muted-custom">{{ metric.label }}</div><div class="metric-value">{{ metric.value }}</div></div></div>
+  </div>
+  <section class="surface-card p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+      <div><h2 class="h5 mb-1">Submission review</h2><p class="text-muted-custom small mb-0">Open submissions for assignments with student work.</p></div>
+      <a routerLink="/Courses" class="btn btn-outline-light btn-sm">Browse Courses</a>
+    </div>
+    @for (assignment of d.submissionAssignments; track assignment.assignmentId) {
+      <div class="list-row">
+        <div><strong>{{ assignment.title }}</strong><div class="text-muted-custom small">{{ assignment.courseName }} · {{ assignment.pendingSubmissions }} pending</div></div>
+        <a class="btn btn-accent btn-sm" [routerLink]="['/Submissions', assignment.assignmentId]">Open Submissions</a>
+      </div>
+    } @empty {
+      <p class="text-muted-custom mb-0">No submissions to review yet.</p>
+    }
+  </section>
+  <section class="surface-card p-4"><h2 class="h5 mb-3">Recent activity</h2>
+    @for (activity of d.recentActivity; track $index) { <div class="activity-row py-3 border-bottom border-secondary" [ngClass]="activityClass(activity.activityType)"><div class="fw-semibold">{{ activity.description }}</div><small class="text-muted-custom">{{ activity.activityType }} · {{ activity.timestamp | date:'short' }}</small></div> }
+    @empty { <p class="text-muted-custom mb-0">No recent activity.</p> }
+  </section>
+} @else if (auth.isStudent() && studentData; as d) {
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3" *ngFor="let metric of [
+      {label: 'My courses', value: d.myCourses}, {label: 'Pending assignments', value: d.pendingAssignments},
+      {label: 'Due tomorrow', value: d.dueTomorrow}, {label: 'Average grade', value: d.averageGrade}
+    ]"><div class="surface-card p-3 metric"><div class="text-muted-custom">{{ metric.label }}</div><div class="metric-value">{{ metric.value }}</div></div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-7"><section class="surface-card p-4 h-100"><h2 class="h5 mb-3">Upcoming deadlines</h2>
+      @for (item of d.upcomingDeadlines; track item.assignmentId) { <a class="list-row" [routerLink]="['/Courses/AssignmentDetails', item.courseId]"><div><strong>{{ item.title }}</strong><div class="text-muted-custom small">{{ item.courseName }} · {{ item.deadline | date:'medium' }}</div></div><span class="badge text-bg-primary">{{ item.remainingTime }}</span><span class="badge text-bg-light">{{ item.status }}</span></a> }
+      @empty { <p class="text-muted-custom mb-0">No upcoming assignments.</p> }
+    </section></div>
+    <div class="col-lg-5"><section class="surface-card p-4 h-100"><h2 class="h5 mb-3">Recent grades</h2>
+      @for (grade of d.recentGrades; track grade.assignmentId) { <div class="list-row"><div><strong>{{ grade.assignmentTitle }}</strong><div class="text-muted-custom small">{{ grade.courseName }}<span *ngIf="grade.gradedAt"> · {{ grade.gradedAt | date:'shortDate' }}</span></div></div><span class="badge text-bg-success">{{ grade.grade }}</span></div> }
+      @empty { <p class="text-muted-custom mb-0">No grades yet.</p> }
+    </section></div>
+  </div>
+} @else if (!errorMessage) { <div class="surface-card p-4 text-muted-custom">Dashboard data is unavailable for this account.</div> }

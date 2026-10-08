@@ -4,6 +4,7 @@ import { StudentService } from '../../Services/student-service';
 import { InstructorService } from '../../Services/instructor-service';
 import { RouterLink } from '@angular/router';
 import { UpperCasePipe } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -41,27 +42,66 @@ export class Profile implements OnInit, OnDestroy {
   }
 
   loadProfileImage(): void {
+    const user: any = this.authservice.getStoredUser();
     const id = this.authservice.getUserId();
-    if (!id) {
-      return;
-    }
+    const idsToTry: string[] = [];
 
-    const request = this.authservice.isStudent()
-      ? this.studentService.getProfileImage(id)
-      : this.instructorService.getProfileImage(id);
+    const pushIfValid = (val: any) => {
+      if (val !== undefined && val !== null && val !== '') {
+        const strVal = String(val);
+        if (!idsToTry.includes(strVal)) idsToTry.push(strVal);
+      }
+    };
 
-    request.subscribe({
-      next: (blob) => {
-        if (this.imageUrl) {
-          URL.revokeObjectURL(this.imageUrl);
+    pushIfValid(id);
+    pushIfValid(user?.id);
+    pushIfValid(user?.iD);
+    pushIfValid(user?.Id);
+    pushIfValid(user?.studentId);
+    pushIfValid(user?.instructorId);
+    pushIfValid(user?.username);
+    pushIfValid(user?.userName);
+    pushIfValid(user?.imageName);
+
+    const isStudent = this.authservice.isStudent();
+
+    const tryNext = (index: number) => {
+      if (index >= idsToTry.length) {
+        const imgName = user?.imageName || user?.ImageName;
+        if (imgName) {
+          const rootUrl = environment.baseUrl.replace(/\/api\/?$/, '');
+          this.imageUrl = `${rootUrl}/images/${imgName}`;
+          this.cdr.markForCheck();
         }
-        this.imageUrl = URL.createObjectURL(blob);
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        /* no image yet */
-      },
-    });
+        return;
+      }
+
+      const currentId = idsToTry[index];
+      const request = isStudent
+        ? this.studentService.getProfileImage(currentId)
+        : this.instructorService.getProfileImage(currentId);
+
+      request.subscribe({
+        next: (blob: Blob) => {
+          if (blob && blob.size > 0) {
+            if (this.imageUrl && this.imageUrl.startsWith('blob:')) {
+              URL.revokeObjectURL(this.imageUrl);
+            }
+            this.imageUrl = URL.createObjectURL(blob);
+            this.cdr.markForCheck();
+          } else {
+            tryNext(index + 1);
+          }
+        },
+        error: () => {
+          tryNext(index + 1);
+        },
+      });
+    };
+
+    if (idsToTry.length > 0) {
+      tryNext(0);
+    }
   }
 
   onFileSelected(event: Event): void {

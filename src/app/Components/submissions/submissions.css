@@ -12,3 +12,4 @@
 .submission-row:last-child {
   border-bottom: none !important;
 }
+.feedback-input { max-width: 220px; }

@@ -8,4 +8,6 @@ export class AuthResponse {
   roles: string[] = [];
   token: string = '';
   expiresOn: string = '';
+  refreshToken: string = '';
+  refreshTokenExpiresOn: string = '';
 }

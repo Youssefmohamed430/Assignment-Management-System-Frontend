@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SubmisiionService } from '../../Services/submisiion-service';
 import { AssignmentService } from '../../Services/assignment-service';
 import { IAssigment } from '../../models/iassigment';
+import { StudentService } from '../../Services/student-service';
 
 @Component({
   selector: 'app-submit-assignment',
@@ -18,12 +19,15 @@ export class SubmitAssignment implements OnInit {
   selectedFile?: File;
   errorMessage = '';
   successMessage = '';
+  nextAttemptNumber = 1;
+  assignmentStatus = 1;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private submissionService: SubmisiionService,
     private assignmentService: AssignmentService,
+    private studentService: StudentService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -33,8 +37,22 @@ export class SubmitAssignment implements OnInit {
     this.assignmentService.getAssignmentById(this.assignmentId).subscribe({
       next: (res) => {
         this.assignmentTitle = res.result?.title ?? '';
+        this.assignmentStatus = res.result?.status ?? 1;
         this.cdr.markForCheck();
       },
+    });
+    this.studentService.getSubmitDetails(this.assignmentId).subscribe({
+      next: (res: any) => {
+        const result = res?.result ?? res?.data ?? res;
+        const submissions = Array.isArray(result) ? result : result ? [result] : [];
+        const lastAttempt = submissions.reduce(
+          (max: number, item: any) => Math.max(max, Number(item?.attemptNumber ?? 0)),
+          0
+        );
+        this.nextAttemptNumber = lastAttempt + 1;
+        this.cdr.markForCheck();
+      },
+      error: () => {},
     });
   }
 
@@ -52,6 +70,10 @@ export class SubmitAssignment implements OnInit {
       this.errorMessage = 'Please select a file';
       return;
     }
+    if (this.assignmentStatus !== 1) {
+      this.errorMessage = 'This assignment is not open for submissions.';
+      return;
+    }
     this.submissionService
       .submitAssignment(this.assignmentId, this.selectedFile)
       .subscribe({
@@ -63,8 +85,12 @@ export class SubmitAssignment implements OnInit {
           }, 800);
         },
         error: (error) => {
-          this.errorMessage =
-            error?.error?.message || 'Submission failed';
+          const message = error?.error?.message || error?.error?.Message || '';
+          const lower = message.toLowerCase();
+          this.errorMessage = lower.includes('draft') ? 'This assignment is still a draft.'
+            : lower.includes('closed') ? 'This assignment is closed and no longer accepts submissions.'
+            : lower.includes('archived') ? 'This assignment is archived and no longer accepts submissions.'
+            : message || 'Submission failed';
           this.cdr.markForCheck();
         },
       });

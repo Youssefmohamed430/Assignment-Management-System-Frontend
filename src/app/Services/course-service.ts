@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../models/response-model';
 import { CourseEnrollDto } from '../models/course-enroll-dto';
+import { CourseAnnouncement, CreateCourseAnnouncement } from '../models/course-announcement';
 
 @Injectable({
   providedIn: 'root',
@@ -70,5 +71,21 @@ export class CourseService {
     return this.httpclient.get(`${environment.baseUrl}/Course/Image/${id}`, {
       responseType: 'blob',
     });
+  }
+
+  public getCourseAnnouncements(courseId: number): Observable<ResponseModel<CourseAnnouncement[]>> {
+    return this.httpclient.get<ResponseModel<CourseAnnouncement[]>>(
+      environment.baseUrl + '/Course/' + courseId + '/announcements'
+    );
+  }
+
+  public createCourseAnnouncement(
+    courseId: number,
+    announcement: CreateCourseAnnouncement
+  ): Observable<ResponseModel<CourseAnnouncement>> {
+    return this.httpclient.post<ResponseModel<CourseAnnouncement>>(
+      environment.baseUrl + '/Course/' + courseId + '/announcements',
+      announcement
+    );
   }
 }

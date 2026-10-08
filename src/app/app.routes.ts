@@ -18,6 +18,8 @@ import { StudentDetails } from './Components/student-details/student-details';
 import { Submissions } from './Components/submissions/submissions';
 import { RegisterStudent } from './Components/register-student/register-student';
 import { Profile } from './Components/profile/profile';
+import { Dashboard } from './Components/dashboard/dashboard';
+import { CourseAnnouncements } from './Components/course-announcements/course-announcements';
 
 import { EnrollCourse } from './Components/enroll-course/enroll-course';
 
@@ -53,6 +55,7 @@ export const routes: Routes = [
     component: Profile,
     canActivate: [authGuardGuard],
   },
+  { path: 'Dashboard', component: Dashboard, canActivate: [authGuardGuard] },
 
   {
     path: 'Courses',
@@ -86,6 +89,12 @@ export const routes: Routes = [
         canActivate: [authGuardGuard],
       },
       {
+        path: 'Announcements/:id',
+        component: CourseAnnouncements,
+        canActivate: [authGuardGuard, roleGuard],
+        data: { roles: ['Student', 'Instructor'] },
+      },
+      {
         path: 'AssignmentDetails/:id/AddAssignment',
         component: AddAssignment,
         canActivate: [authGuardGuard, roleGuard],
@@ -117,7 +126,7 @@ export const routes: Routes = [
     path: 'Students/Register',
     component: RegisterStudent,
     canActivate: [authGuardGuard, roleGuard],
-    data: { role: 'Instructor' },
+    data: { role: 'Admin' },
   },
 
   {

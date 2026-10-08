@@ -21,7 +21,17 @@ export class StudentDetails implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    const navStudent = history.state?.student;
+    if (navStudent && typeof navStudent === 'object') {
+      this.student = navStudent;
+      this.loadProfileImage();
+      this.cdr.markForCheck();
+      return;
+    }
+
     const name = this.route.snapshot.paramMap.get('name') ?? '';
+    if (!name) return;
+
     this.studentService.searchStudentByName(name).subscribe({
       next: (res: any) => {
         const data = res?.result ?? res?.data ?? res;
@@ -44,31 +54,49 @@ export class StudentDetails implements OnInit, OnDestroy {
   }
 
   private loadProfileImage(): void {
-    const id = this.getStudentId();
-    if (!id) return;
+    const s: any = this.student;
+    if (!s) return;
 
-    this.studentService.getProfileImage(id).subscribe({
+    const studentId = this.getStudentId();
+    if (!studentId) return;
+
+    this.studentService.getProfileImage(studentId).subscribe({
       next: (blob: Blob) => {
-        if (this.imageUrl) {
-          URL.revokeObjectURL(this.imageUrl);
+        if (blob && blob.size > 0) {
+          if (this.imageUrl && this.imageUrl.startsWith('blob:')) {
+            URL.revokeObjectURL(this.imageUrl);
+          }
+          this.imageUrl = URL.createObjectURL(blob);
+          this.cdr.markForCheck();
         }
-        this.imageUrl = URL.createObjectURL(blob);
-        this.cdr.markForCheck();
       },
       error: () => {
-        /* no image, keep placeholder */
+        this.imageUrl = '';
+        this.cdr.markForCheck();
       },
     });
   }
 
   private getStudentId(): string {
     const s: any = this.student;
-    const id = s?.id ?? s?.studentId ?? s?.userId ?? '';
+    const id =
+      s?.id ??
+      s?.Id ??
+      s?.studentId ??
+      s?.StudentId ??
+      s?.userId ??
+      s?.UserId ??
+      '';
     return id ? String(id) : '';
   }
 
+  onImageError(): void {
+    this.imageUrl = '';
+    this.cdr.markForCheck();
+  }
+
   ngOnDestroy(): void {
-    if (this.imageUrl) {
+    if (this.imageUrl && this.imageUrl.startsWith('blob:')) {
       URL.revokeObjectURL(this.imageUrl);
     }
   }

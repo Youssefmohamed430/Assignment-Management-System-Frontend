@@ -6,6 +6,22 @@
           <h1 class="auth-title">Sign in</h1>
           <p class="auth-subtitle">Access your Assignment Manager account</p>
 
+          <div class="mb-4 p-3 border rounded-3">
+            <p class="fw-semibold mb-1">Demo accounts</p>
+            <p class="small text-muted mb-3">Select an account to fill in the login form.</p>
+            <div class="d-flex flex-wrap gap-2">
+              @for (account of demoAccounts; track account.username) {
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  (click)="fillDemoAccount(account)"
+                >
+                  {{ account.label }} Demo
+                </button>
+              }
+            </div>
+          </div>
+
           @if (errorMessage) {
             <div class="alert alert-danger">{{ errorMessage }}</div>
           }

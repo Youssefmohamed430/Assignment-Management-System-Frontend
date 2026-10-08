@@ -42,6 +42,14 @@
             >
               Assignments
             </a>
+            @if (authservice.isInstructor() || authservice.isStudent()) {
+              <a
+                class="btn btn-outline-info btn-sm"
+                [routerLink]="['/Courses/Announcements', course.id]"
+              >
+                Announcements
+              </a>
+            }
             @if (authservice.isAdmin()) {
               <a
                 class="btn btn-outline-light btn-sm"

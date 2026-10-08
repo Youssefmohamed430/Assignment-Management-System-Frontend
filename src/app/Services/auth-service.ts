@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, finalize, shareReplay, tap, throwError } from 'rxjs';
 import { LoginUser } from '../models/login-user';
 import { AuthResponse } from '../models/auth-response';
 import { environment } from '../../environments/environment';
@@ -12,6 +12,7 @@ import { RegisterUser } from '../models/register-user';
 export class AuthService {
   private loggedInSubject = new BehaviorSubject<boolean>(this.hasSession());
   loggedIn$ = this.loggedInSubject.asObservable();
+  private refreshRequest?: Observable<AuthResponse>;
 
   constructor(private httpclient: HttpClient) {}
 
@@ -36,16 +37,53 @@ export class AuthService {
     );
   }
 
+  refreshSession(): Observable<AuthResponse> {
+    if (this.refreshRequest) {
+      return this.refreshRequest;
+    }
+
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+      return throwError(() => new Error('No refresh token is available.'));
+    }
+
+    this.refreshRequest = this.httpclient
+      .post<AuthResponse>(`${environment.baseUrl}/Auth/RefreshToken`, { refreshToken })
+      .pipe(
+        tap((response) => this.setSession(response)),
+        finalize(() => (this.refreshRequest = undefined)),
+        shareReplay({ bufferSize: 1, refCount: false })
+      );
+
+    return this.refreshRequest;
+  }
+
   setSession(response: AuthResponse): void {
     localStorage.setItem('user', JSON.stringify(response));
     localStorage.setItem('token', response.token);
+    localStorage.setItem('refreshToken', response.refreshToken);
     this.loggedInSubject.next(true);
   }
 
   logout(): void {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken) {
+      this.httpclient
+        .post(`${environment.baseUrl}/Auth/RevokeToken`, { refreshToken })
+        .subscribe({ error: () => undefined });
+    }
+    this.clearSession();
+  }
+
+  clearSession(): void {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     this.loggedInSubject.next(false);
+  }
+
+  getAccessToken(): string | null {
+    return localStorage.getItem('token');
   }
 
   getUserLogged(): boolean {

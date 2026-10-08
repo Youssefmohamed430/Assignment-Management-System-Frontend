@@ -30,13 +30,20 @@
     <div class="mb-3">
       <label for="assignmentDeadline" class="form-label">Deadline</label>
       <input
-        type="date"
+        type="datetime-local"
         id="assignmentDeadline"
         class="form-control"
         [(ngModel)]="assignment.deadLine"
         name="deadline"
         required
       />
+    </div>
+
+    <div class="mb-3">
+      <label for="assignmentStatus" class="form-label">Initial status</label>
+      <select id="assignmentStatus" class="form-select" [(ngModel)]="assignment.status" name="status">
+        <option [ngValue]="1">Published</option><option [ngValue]="0">Draft</option>
+      </select>
     </div>
 
     <div class="mb-4">

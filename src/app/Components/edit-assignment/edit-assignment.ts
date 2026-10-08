@@ -43,10 +43,7 @@ export class EditAssignment implements OnInit {
           deadLine: data?.deadLine || data?.deadline || '',
         };
         if (this.assignment.deadLine) {
-          this.assignment.deadLine = String(this.assignment.deadLine).substring(
-            0,
-            10
-          );
+          this.assignment.deadLine = new Date(this.assignment.deadLine).toISOString().slice(0, 16);
         }
         this.cdr.markForCheck();
       },

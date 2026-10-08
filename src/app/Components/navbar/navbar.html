@@ -21,6 +21,9 @@
         </li>
 
         @if (isLoggedIn) {
+          @if (authservice.isInstructor() || authservice.isStudent()) {
+            <li class="nav-item"><a class="nav-link" routerLink="/Dashboard" routerLinkActive="active">Dashboard</a></li>
+          }
           <li class="nav-item">
             <a class="nav-link" routerLink="/Courses" routerLinkActive="active">Courses</a>
           </li>
@@ -28,6 +31,12 @@
           @if (authservice.isInstructor()) {
             <li class="nav-item">
               <a class="nav-link" routerLink="/Students" routerLinkActive="active">Students</a>
+            </li>
+          }
+
+          @if (authservice.isAdmin()) {
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/Students/Register" routerLinkActive="active">Register Student</a>
             </li>
           }
 

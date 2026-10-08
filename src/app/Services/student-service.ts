@@ -6,12 +6,19 @@ import { ICourse } from '../models/ICourse';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { AssignmentSubsDetails } from '../models/assignment-subs-details';
+import { StudentDashboardDto } from '../models/dashboard';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentService {
   constructor(private httpclient: HttpClient) {}
+
+  public getDashboard(): Observable<ResponseModel<StudentDashboardDto>> {
+    return this.httpclient.get<ResponseModel<StudentDashboardDto>>(
+      `${environment.baseUrl}/Student/dashboard`
+    );
+  }
 
   public GetCourseEnrollments(): Observable<ResponseModel<ICourse[]>> {
     return this.httpclient.get<ResponseModel<ICourse[]>>(
@@ -21,8 +28,8 @@ export class StudentService {
 
   public getSubmitDetails(
     assignId: number
-  ): Observable<ResponseModel<AssignmentSubsDetails>> {
-    return this.httpclient.get<ResponseModel<AssignmentSubsDetails>>(
+  ): Observable<ResponseModel<AssignmentSubsDetails[]>> {
+    return this.httpclient.get<ResponseModel<AssignmentSubsDetails[]>>(
       `${environment.baseUrl}/Student/SubmitDetails?assignid=${assignId}`
     );
   }

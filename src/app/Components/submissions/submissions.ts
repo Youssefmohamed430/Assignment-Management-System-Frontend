@@ -1,14 +1,16 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DatePipe, NgIf } from '@angular/common';
 import { Submission } from '../../models/submission';
 import { SubmisiionService } from '../../Services/submisiion-service';
 import { InstructorService } from '../../Services/instructor-service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AssignmentStudentGrades } from '../../models/assignment-student-grades';
+import { StatusBadge } from '../status-badge/status-badge';
 
 @Component({
   selector: 'app-submissions',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, StatusBadge, DatePipe, NgIf],
   templateUrl: './submissions.html',
   styleUrl: './submissions.css',
 })
@@ -19,6 +21,7 @@ export class Submissions implements OnInit {
   gradeInputs: Record<number, number | null> = {};
   errorMessage = '';
   successMessage = '';
+  feedbackInputs: Record<number, string> = {};
 
   constructor(
     private submissionService: SubmisiionService,
@@ -46,6 +49,7 @@ export class Submissions implements OnInit {
           const id = s.submissionId ?? s.id;
           if (id) {
             this.gradeInputs[id] = s.grade ?? null;
+            this.feedbackInputs[id] = s.feedback ?? '';
           }
         });
         this.cdr.markForCheck();
@@ -112,6 +116,13 @@ export class Submissions implements OnInit {
           error?.error?.message || 'Failed to save grade';
         this.cdr.markForCheck();
       },
+    });
+  }
+
+  saveFeedback(submissionId: number): void {
+    this.instructorService.setFeedback(submissionId, this.feedbackInputs[submissionId] ?? '').subscribe({
+      next: (res) => { this.successMessage = res.message || 'Feedback saved'; this.loadSubmissions(); this.cdr.markForCheck(); },
+      error: (error) => { this.errorMessage = error?.error?.message || 'Failed to save feedback'; this.cdr.markForCheck(); },
     });
   }
 }

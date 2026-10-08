@@ -3,6 +3,7 @@ import { IAssigment } from '../../models/iassigment';
 import { FormsModule } from '@angular/forms';
 import { AssignmentService } from '../../Services/assignment-service';
 import { ResponseModel } from '../../models/response-model';
+import { AssignmentStatus } from '../../models/enums';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
@@ -12,7 +13,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
   styleUrl: './add-assignment.css',
 })
 export class AddAssignment {
-  assignment: IAssigment = new IAssigment();
+  assignment: IAssigment = Object.assign(new IAssigment(), { status: AssignmentStatus.Published });
   errorMessage = '';
   courseId = 0;
 
@@ -28,6 +29,7 @@ export class AddAssignment {
   public AddAssignment() {
     this.errorMessage = '';
     this.assignment.crsId = this.courseId;
+    this.assignment.status ??= AssignmentStatus.Published;
     if (!this.assignment.assignmentFile) {
       this.errorMessage = 'Assignment file is required';
       return;

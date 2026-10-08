@@ -3,4 +3,7 @@ export interface AssignmentSubsDetails {
   deadLine: string;
   fileName: string;
   grade: number | null;
+  feedback?: string | null;
+  attemptNumber?: number;
+  submitedAt?: string;
 }

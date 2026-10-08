@@ -41,8 +41,9 @@ export class AssignmentService {
   ): Observable<ResponseModel<IAssigment>> {
     const formData = new FormData();
     formData.append('Title', assignment.title);
-    formData.append('DeadLine', assignment.deadLine);
+    formData.append('DeadLine', this.toIsoDateTime(assignment.deadLine));
     formData.append('CrsId', assignment.crsId.toString());
+    if (assignment.status !== undefined) formData.append('Status', String(assignment.status));
     if (assignment.assignmentFile) {
       formData.append('File', assignment.assignmentFile);
     }
@@ -57,8 +58,9 @@ export class AssignmentService {
   ): Observable<ResponseModel<IAssigment>> {
     const body = {
       title: updatedAssignment.title,
-      deadLine: updatedAssignment.deadLine,
+      deadLine: this.toIsoDateTime(updatedAssignment.deadLine),
       crsId: updatedAssignment.crsId,
+      status: updatedAssignment.status,
     };
     return this.httpclient.put<ResponseModel<IAssigment>>(
       `${environment.baseUrl}/Assignment/${updatedAssignment.assignmentId}`,
@@ -72,5 +74,10 @@ export class AssignmentService {
     return this.httpclient.delete<ResponseModel<IAssigment>>(
       `${environment.baseUrl}/Assignment/${id}`
     );
+  }
+
+  private toIsoDateTime(value: string): string {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? value : parsed.toISOString();
   }
 }

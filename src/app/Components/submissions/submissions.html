@@ -20,9 +20,12 @@
         <div>
           <h5 class="mb-1">{{ sub.stuname || 'Student' }}</h5>
           <small class="text-muted-custom">{{ sub.fileName }}</small>
+          <div class="mt-2"><app-status-badge [status]="sub.status" kind="submission" /></div>
+          <div class="small text-muted-custom">Attempt {{ sub.attemptNumber }} · {{ sub.isLate ? 'Late' : 'On time' }}<span *ngIf="sub.submitedAt"> · {{ sub.submitedAt | date:'short' }}</span></div>
           <div class="small mt-1">
             Current grade: {{ sub.grade != null ? sub.grade : 'Not graded' }}
           </div>
+          @if (sub.feedback) { <div class="small mt-1">Feedback: {{ sub.feedback }}</div> }
         </div>
 
         <div class="d-flex flex-wrap align-items-center gap-2">
@@ -42,6 +45,8 @@
           >
             Save Grade
           </button>
+          <input type="text" class="form-control form-control-sm feedback-input" placeholder="Instructor feedback" [(ngModel)]="feedbackInputs[sub.submissionId!]" [name]="'feedback-' + sub.submissionId" />
+          <button type="button" class="btn btn-outline-info btn-sm" (click)="saveFeedback(sub.submissionId!)">Save Feedback</button>
           <button
             type="button"
             class="btn btn-outline-light btn-sm"
